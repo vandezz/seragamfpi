@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="<?php echo base_url('css/all.min.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('css/adminlte.min.css'); ?>">
   <link rel="stylesheet" href="<?php echo base_url('css/OverlayScrollbars.min.css'); ?>">
+  <?php if(isset($pageStyles)) echo $pageStyles; ?>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

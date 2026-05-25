@@ -349,7 +349,29 @@ class Page extends MY_Controller {
  public function rubahtanggalmax()
  {
 	 $data['tglm'] = $this->UserModel->showall('seragam_param');
-	 
+	 $data['pageStyles']  = '<link rel="stylesheet" href="'.base_url('css/tempusdominus-bootstrap-4.min.css').'">';
+	 $data['pageScripts'] = '<script src="'.base_url('js/moment.min.js').'"></script>
+<script src="'.base_url('js/tempusdominus-bootstrap-4.min.js').'"></script>
+<script>
+$(function(){
+  $("#datepicker").datetimepicker({
+    format: "YYYY-MM-DD",
+    locale: "id",
+    useCurrent: false,
+    icons: {
+      time: "fas fa-clock",
+      date: "fas fa-calendar",
+      up: "fas fa-arrow-up",
+      down: "fas fa-arrow-down",
+      previous: "fas fa-chevron-left",
+      next: "fas fa-chevron-right",
+      today: "fas fa-calendar-check",
+      clear: "fas fa-trash",
+      close: "fas fa-times"
+    }
+  });
+});
+</script>';
 	 $this->render_backend('parameter',$data);
  }
  
