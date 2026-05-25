@@ -281,7 +281,7 @@ class Page extends MY_Controller {
  public function ckar(){
 	 if($this->session->userdata('role') == '1'){
 		 $data['tag']=1;
-		 $data['dk'] = $this->UserModel->showw('karyawan_s','is_active','1');
+		 $data['dk'] = $this->UserModel->gwssort('karyawan_s','is_active','1');
 		 $data['dkr'] = NULL;
 		 $this->render_backend('fkar',$data);
 	 }
@@ -293,7 +293,7 @@ class Page extends MY_Controller {
 		 // Support both POST (form) and GET (button fallback)
 		 $n = $this->input->post('tkar') ?: $this->input->get('tkar');
 		 $data['tag']=2;
-		 $data['dk'] = $this->UserModel->showw('karyawan_s','is_active','1');
+		 $data['dk'] = $this->UserModel->gwssort('karyawan_s','is_active','1');
 		 $data['dkr']=$this->UserModel->showlike('karyawan_s','nama_karyawan',$n,'is_active','1');
 		 $this->render_backend('fkar',$data);
 	 }
