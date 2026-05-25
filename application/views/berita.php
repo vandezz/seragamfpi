@@ -89,9 +89,7 @@
 					<?php echo "Ukuran celana :".$lalu->size_celana; ?>
 				</td>
 			</tr>
-			<? }
-			else
-			{ ?>
+			<?php } else { ?>
 				<tr>
                 
                 <td>Ukuran BAJU</td>
@@ -153,7 +151,7 @@
 			</tr>
 			
 			
-		<? } 
+		<?php } 
 			if(empty($ds->keterangan)){
 				$keterangan = '';
 			}
