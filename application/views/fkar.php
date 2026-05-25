@@ -83,31 +83,9 @@ $dk->free_result();
 </div>
 <?php endif; ?>
 
-<script src="<?= base_url('js/jquery-ui.min.js') ?>"></script>
 <script>
-(function(){
-  var employees = <?= json_encode($karyawan_list) ?>;
-
-  $('#tkar').autocomplete({
-    source: employees,
-    minLength: 1,
-    delay: 0,
-    select: function(event, ui) {
-      window.location = '<?= base_url('index.php/page/ckary/') ?>' + ui.item.id;
-      return false;
-    }
-  });
-
-  // Fallback: manual search button / Enter key
-  $('#btnCari').on('click', function(){
-    var q = $('#tkar').val().trim();
-    if(q) window.location = '<?= base_url('index.php/page/ckarx') ?>?tkar=' + encodeURIComponent(q);
-  });
-  $('#tkar').on('keydown', function(e){
-    if(e.key === 'Enter'){
-      var q = $(this).val().trim();
-      if(q) window.location = '<?= base_url('index.php/page/ckarx') ?>?tkar=' + encodeURIComponent(q);
-    }
-  });
-})();
+/* Employee data for autocomplete - no jQuery needed */
+window._employees = <?= json_encode($karyawan_list) ?>;
+window._ckarBase  = '<?= base_url('index.php/page/ckary/') ?>';
+window._ckarxUrl  = '<?= base_url('index.php/page/ckarx') ?>';
 </script>

@@ -283,6 +283,7 @@ class Page extends MY_Controller {
 		 $data['tag']=1;
 		 $data['dk'] = $this->UserModel->gwssort('karyawan_s','is_active','1');
 		 $data['dkr'] = NULL;
+		 $data['pageScripts'] = $this->_autocomplete_scripts();
 		 $this->render_backend('fkar',$data);
 	 }
 	 else{ $this->home(); }
@@ -295,10 +296,39 @@ class Page extends MY_Controller {
 		 $data['tag']=2;
 		 $data['dk'] = $this->UserModel->gwssort('karyawan_s','is_active','1');
 		 $data['dkr']=$this->UserModel->showlike('karyawan_s','nama_karyawan',$n,'is_active','1');
+		 $data['pageScripts'] = $this->_autocomplete_scripts();
 		 $this->render_backend('fkar',$data);
 	 }
 	 else{ $this->home(); }
  }
+
+ private function _autocomplete_scripts(){
+	 return '<script src="'.base_url('js/jquery-ui.min.js').'"></script>
+<script>
+(function(){
+  $("#tkar").autocomplete({
+    source: window._employees || [],
+    minLength: 1,
+    delay: 0,
+    select: function(event, ui){
+      window.location = window._ckarBase + ui.item.id;
+      return false;
+    }
+  });
+  $("#btnCari").on("click", function(){
+    var q = $("#tkar").val().trim();
+    if(q) window.location = window._ckarxUrl + "?tkar=" + encodeURIComponent(q);
+  });
+  $("#tkar").on("keydown", function(e){
+    if(e.key === "Enter"){
+      var q = $(this).val().trim();
+      if(q) window.location = window._ckarxUrl + "?tkar=" + encodeURIComponent(q);
+    }
+  });
+})();
+</script>';
+ }
+
  public function ckary(){
 	 if($this->session->userdata('role') == '1'){ // Jika role-nya admin
 		 $idky = $this->uri->segment(3);

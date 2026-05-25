@@ -109,5 +109,6 @@
 <script src="<?php echo base_url('js/bootstrap.bundle.min.js'); ?>"></script>
 <script src="<?php echo base_url('js/jquery.overlayScrollbars.min.js'); ?>"></script>
 <script src="<?php echo base_url('js/adminlte.js'); ?>"></script>
+<?php if(isset($pageScripts)) echo $pageScripts; ?>
 </body>
 </html>
