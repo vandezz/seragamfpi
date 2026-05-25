@@ -1,44 +1,113 @@
-<?php 
-if($tag==1){
-	?>
-<form name="fk" id="fk" method="post" action="ckarx">
-<div class="table-responsive">
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th colspan='3' align='center'>Cari Karyawan</th>
-            </tr>
-			<tr><td>Nama Karyawan</td><td><input type='text' name='tkar' autofocus></td><td><input type='submit' value='Cari'></td></tr>
-        </thead>
-	</table>
+<?php
+// Build JSON list of employees for autocomplete
+$karyawan_list = [];
+foreach($dk->result() as $kw){
+    $karyawan_list[] = ['id' => $kw->id_karyawan, 'label' => $kw->nama_karyawan];
+}
+$dk->free_result();
+?>
+
+<style>
+.ui-autocomplete {
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 9999 !important;
+    border: 1px solid #ced4da;
+    border-radius: 0 0 .25rem .25rem;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 4px 0;
+}
+.ui-menu-item-wrapper {
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.ui-state-active, .ui-widget-content .ui-state-active {
+    background: #007bff !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 0;
+}
+</style>
+
+<div class="card card-primary card-outline">
+  <div class="card-header">
+    <h3 class="card-title"><i class="fas fa-search mr-2"></i>Cari Karyawan</h3>
+  </div>
+  <div class="card-body">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <label class="mb-1">Nama Karyawan</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
+          <input type="text" id="tkar" name="tkar" class="form-control"
+                 placeholder="Ketik nama karyawan..." autofocus autocomplete="off">
+          <div class="input-group-append">
+            <button class="btn btn-primary" id="btnCari" type="button">
+              <i class="fas fa-search mr-1"></i>Cari
+            </button>
+          </div>
+        </div>
+        <small class="text-muted">Mulai ketik untuk melihat saran nama karyawan.</small>
+      </div>
+    </div>
+  </div>
 </div>
-</form>
-<?php }
-if($tag==2){
-	$no=1;
-	?>
-	<div class="table-responsive">
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th colspan='2'>Pilih Karyawan</th>
-            </tr>
-			<tr>
-                <th>NO</th><th>Nama Karyawan</th>
-            </tr>
-		</thead>
-		<?php
-		foreach($dkr->result() as $k){
-			
-				?>	
-				<tr><td><?php echo $no++;?></td><td><?php echo anchor(base_url()."index.php/page/ckary/".$k->id_karyawan,$k->nama_karyawan);?></td></tr>
-				<?php
-				
-			} ?>
-		
-        
-	</table>
-	</div>
-	
-	
-<?php } ?>
+
+<?php if($tag==2): $no=1; ?>
+<div class="card card-outline card-secondary">
+  <div class="card-header">
+    <h3 class="card-title"><i class="fas fa-list mr-2"></i>Hasil Pencarian</h3>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover mb-0">
+        <thead class="thead-light">
+          <tr><th>No</th><th>Nama Karyawan</th></tr>
+        </thead>
+        <tbody>
+          <?php foreach($dkr->result() as $k): ?>
+          <tr>
+            <td><?= $no++ ?></td>
+            <td><a href="<?= base_url('index.php/page/ckary/'.$k->id_karyawan) ?>"><?= $k->nama_karyawan ?></a></td>
+          </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+<script src="<?= base_url('js/jquery-ui.min.js') ?>"></script>
+<script>
+(function(){
+  var employees = <?= json_encode($karyawan_list) ?>;
+
+  $('#tkar').autocomplete({
+    source: employees,
+    minLength: 1,
+    delay: 0,
+    select: function(event, ui) {
+      window.location = '<?= base_url('index.php/page/ckary/') ?>' + ui.item.id;
+      return false;
+    }
+  });
+
+  // Fallback: manual search button / Enter key
+  $('#btnCari').on('click', function(){
+    var q = $('#tkar').val().trim();
+    if(q) window.location = '<?= base_url('index.php/page/ckarx') ?>?tkar=' + encodeURIComponent(q);
+  });
+  $('#tkar').on('keydown', function(e){
+    if(e.key === 'Enter'){
+      var q = $(this).val().trim();
+      if(q) window.location = '<?= base_url('index.php/page/ckarx') ?>?tkar=' + encodeURIComponent(q);
+    }
+  });
+})();
+</script>
