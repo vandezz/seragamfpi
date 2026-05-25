@@ -209,19 +209,18 @@
 	<li>Pengisian form ukuran Seragam paling lambat hari <b style ='color:red'> 
 	<?php
 		$due = $this->UserModel->showall('seragam_param')->row();
-		$t =$due->tanggalmax;
-		$tg = explode('-',$t);
-		$tgl = $tg[2];
-		$bln = $tg[1];
-		$thn = $tg[0];
-		
-		echo date('l', strtotime(date('Y-m-d')));
+		$t = $due->tanggalmax;
+		$ts = strtotime($t);
+
+		$hari_id = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+		$bulan_id = ['','Januari','Februari','Maret','April','Mei','Juni',
+		             'Juli','Agustus','September','Oktober','November','Desember'];
+
+		echo $hari_id[date('w', $ts)];
 		echo ", ";
-		echo $tgl."-";
-		echo date('M', strtotime(date('Y-m-d')));
-		echo "-".$thn;
-		
-		
+		echo date('j', $ts) . " ";
+		echo $bulan_id[(int)date('n', $ts)];
+		echo " " . date('Y', $ts);
 	?>
 	</b></li>
 </ul>
