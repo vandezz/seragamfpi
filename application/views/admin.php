@@ -105,6 +105,21 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
         </div>
       </div>
 
+      <!-- Parameter Tanggal Maksimal -->
+      <div class="col-12">
+        <div class="card card-danger card-outline">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-calendar-check mr-2"></i>Parameter Tanggal</h3>
+          </div>
+          <div class="card-body py-2">
+            <p class="mb-2 text-muted" style="font-size:13px">Atur batas tanggal maksimal pengisian form seragam.</p>
+            <a href="<?= base_url('index.php/page/rubahtanggalmax') ?>" class="btn btn-danger btn-sm">
+              <i class="fas fa-edit mr-1"></i>Ubah Tanggal Maksimal
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- Lihat Data Periode Lain -->
       <div class="col-12">
         <div class="card card-secondary card-outline">
