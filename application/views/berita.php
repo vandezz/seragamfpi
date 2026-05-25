@@ -1,24 +1,18 @@
-<?php
-
-// Cek role user
-if($this->session->userdata('role') == '1'){ // Jika role-nya admin
-    ?>
-    <div class="pull-right">
-        <a href="" class="btn btn-success">TAMBAH DATA</a>
-    </div>
-    <?php
-}
-?>
-
-<h3 style="margin-top: 0;margin-bottom: 0; color:navy">Input Seragam Tahun <?php echo date('Y');?></h3>
-<br/>
-<h4 style="margin-top: 0;margin-bottom: 0; color:Tomato">per karyawan mendapatkan 1 Stel seragam</h4>
+<div class="row">
+<div class="col-12">
+<div class="card card-primary card-outline">
+<div class="card-header d-flex justify-content-between align-items-center">
+  <h3 class="card-title"><i class="fas fa-tshirt mr-2"></i>Input Seragam Tahun <?php echo date('Y');?></h3>
+  <?php if($this->session->userdata('role') == '1'): ?>
+  <a href="" class="btn btn-success btn-sm"><i class="fas fa-plus mr-1"></i>Tambah Data</a>
+  <?php endif; ?>
+</div>
+<div class="card-body">
+<p class="text-danger font-weight-bold"><i class="fas fa-info-circle mr-1"></i>Per karyawan mendapatkan 1 Stel seragam</p>
 <div class="clearfix"></div>
 <hr />
 
 <div class="table-responsive">
-
-
 <form name="fukuran" id="fukuran" action="<?=base_url();?>index.php/page/ukuran" method="post">
     <table class="table table-bordered table-hover">
         <thead>
@@ -34,7 +28,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
                 
                 <td>Ukuran BAJU</td>
                 <td> 
-				<select name="sizebaju" id="sizebaju">
+				<select class="form-control" name="sizebaju" id="sizebaju">
 				<?php 
 				if(!empty($ds->size_baju)){
 					echo "<option value='".$ds->size_baju."' selected>".$ds->size_baju."</option>";
@@ -49,7 +43,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
 				</select> 
 				</td>
                 <td>
-					<select name="lengan" id="lengan">
+					<select class="form-control" name="lengan" id="lengan">
 						<?php 
 						if(!empty($ds->lengan)){
 						echo "<option value='".$ds->lengan."' selected>".$ds->lengan."</option>";
@@ -67,7 +61,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
 					Ukuran CELANA
 				</td>
 				<td>
-					<select name="sizecelana" id="sizecelana">
+					<select class="form-control" name="sizecelana" id="sizecelana">
 						<?php 
 						if(!empty($ds->size_celana)){
 							echo "<option value='".$ds->size_celana."' selected>".$ds->size_celana."</option>";
@@ -102,7 +96,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
                 
                 <td>Ukuran BAJU</td>
                 <td> 
-				<select name="sizebaju" id="sizebaju">
+				<select class="form-control" name="sizebaju" id="sizebaju">
 				  <option value="S">S</option>
 				  <option value="M">M</option>
 				  <option value="L">L</option>
@@ -112,7 +106,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
 				  <option value="other">Other</option>
 				</select> </td>
                 <td>
-					<select name="lengan" id="lengan">
+					<select class="form-control" name="lengan" id="lengan">
 						<option value="Lengan Panjang">Lengan Panjang</option>
 						<option value="Lengan Pendek">Lengan Pendek</option>
 					</select>
@@ -126,7 +120,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
 					Ukuran CELANA
 				</td>
 				<td>
-					<select name="sizecelana" id="sizecelana">
+					<select class="form-control" name="sizecelana" id="sizecelana">
 						<option value="27">27</option>
 						<option value="28">28</option>
 						<option value="29">29</option>
@@ -170,7 +164,7 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
 			<tr>
 				<td>Keterangan</td>
 				
-				<td colspan="2"><textarea rows="4" name="keterangan" id="keterangan"><?php echo $keterangan;?></textarea></td>
+				<td colspan="2"><textarea class="form-control" class="form-control" rows="4" name="keterangan" id="keterangan"><?php echo $keterangan;?></textarea></td>
 				<td bgcolor='#f2f3f4'></td>
 			</tr>
 			<?php 
@@ -200,9 +194,16 @@ if($this->session->userdata('role') == '1'){ // Jika role-nya admin
     </table>
 	</form>
 </div>
-<div>
-Keterangan:
-</br>
+</div>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12">
+<div class="card card-info card-outline">
+<div class="card-header"><h3 class="card-title"><i class="fas fa-info-circle mr-2"></i>Keterangan</h3></div>
+<div class="card-body">
 <ul>
 	<li>Jika tidak ada pilihan pada opsi, pilih Other, isi di kolom Keterangan</li>
 	<li>Setelah Submit, hasil pengisian akan muncul di halaman berikutnya</li>
@@ -226,4 +227,7 @@ Keterangan:
 	?>
 	</b></li>
 </ul>
+</div>
+</div>
+</div>
 </div>

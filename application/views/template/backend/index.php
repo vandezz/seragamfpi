@@ -1,57 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Seragam <?php echo date('Y');?></title>
-	
-	<link rel = "short icon" href="<?php echo base_url('assets/img/uniform.png'); ?>" type="image/png"> 
-    <!-- Load File CSS Bootstrap  -->
-    <link href="<?php echo base_url('css/bootstrap.min.css'); ?>" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <style>
-    body {
-        min-height: 2000px;
-        padding-top: 70px;
-    }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seragam <?php echo date('Y'); ?> | FPI</title>
+  <link rel="shortcut icon" href="<?php echo base_url('assets/img/uniform.png'); ?>" type="image/png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link rel="stylesheet" href="<?php echo base_url('css/all.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('css/adminlte.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo base_url('css/OverlayScrollbars.min.css'); ?>">
 </head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
 
-<body>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <?php
-        /*
-        * Variabel $headernya diambil dari core MY_Controller
-        * (application/core/MY_Controller.php)
-        * */
-        echo $headernya;
-        ?>
-    </nav>
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="<?php echo base_url('assets/img/uniform.png'); ?>" alt="SeragamFPI" height="60" width="60">
+  </div>
 
-    <div class="container">
-        <?php
-        /*
-        * Variabel $contentnya diambil dari core MY_Controller
-        * (application/core/MY_Controller.php)
-        * */
-        echo $contentnya;
-        ?>
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-dark navbar-primary">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="<?php echo base_url('index.php/page/home'); ?>" class="nav-link">
+          <i class="fas fa-home mr-1"></i> Home
+        </a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <span class="nav-link text-light">
+          <i class="fas fa-user-circle mr-1"></i>
+          <?php echo $this->session->userdata('nama'); ?>
+        </span>
+      </li>
+      <li class="nav-item">
+        <a href="<?php echo base_url('index.php/auth/logout'); ?>" class="nav-link">
+          <i class="fas fa-sign-out-alt mr-1"></i> Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a href="<?php echo base_url('index.php/page/home'); ?>" class="brand-link">
+      <img src="<?php echo base_url('assets/img/uniform.png'); ?>" alt="FPI Logo" class="brand-image img-circle elevation-3" style="opacity:.8">
+      <span class="brand-text font-weight-light">SeragamFPI</span>
+    </a>
+    <div class="sidebar">
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="<?php echo base_url('assets/img/uniform.png'); ?>" class="img-circle elevation-2" alt="User">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block"><?php echo $this->session->userdata('nama'); ?></a>
+          <small class="text-muted">NIK: <?php echo $this->session->userdata('username'); ?></small>
+        </div>
+      </div>
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <?php echo $headernya; ?>
+        </ul>
+      </nav>
     </div>
+  </aside>
 
-    <!-- Load file Javascript Bootstrap & jQuery -->
-    <script src="<?php echo base_url('js/jquery.min.js'); ?>"></script>
-    <script src="<?php echo base_url('js/bootstrap.min.js'); ?>"></script>
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Seragam <small class="text-muted"><?php echo date('Y'); ?></small></h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="<?php echo base_url('index.php/page/home'); ?>">Home</a></li>
+              <li class="breadcrumb-item active">PT. Fuji Presisi-Tool Indonesia</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="container-fluid">
+        <?php echo $contentnya; ?>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <strong>&copy; <?php echo date('Y'); ?> PT. Fuji Presisi-Tool Indonesia</strong>
+    <div class="float-right d-none d-sm-inline-block">
+      <b>SeragamFPI</b> v1.0
+    </div>
+  </footer>
+
+  <aside class="control-sidebar control-sidebar-dark"></aside>
+</div>
+
+<script src="<?php echo base_url('js/jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('js/bootstrap.bundle.min.js'); ?>"></script>
+<script src="<?php echo base_url('js/jquery.overlayScrollbars.min.js'); ?>"></script>
+<script src="<?php echo base_url('js/adminlte.js'); ?>"></script>
 </body>
 </html>
