@@ -30,6 +30,12 @@
     <p>Cari Karyawan</p>
   </a>
 </li>
+<li class="nav-item">
+  <a href="<?php echo base_url('index.php/page/laporan'); ?>" class="nav-link <?php echo ($this->uri->segment(2) == 'laporan') ? 'active' : ''; ?>">
+    <i class="nav-icon fas fa-chart-bar"></i>
+    <p>Laporan</p>
+  </a>
+</li>
 <?php endif; ?>
 <li class="nav-item mt-2">
   <a href="<?php echo base_url('index.php/auth/logout'); ?>" class="nav-link">

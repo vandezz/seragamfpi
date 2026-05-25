@@ -190,7 +190,25 @@ GROUP BY nama
 	public function disting($tbl,$f){
 		return $h = $this->db->query("SELECT DISTINCT $f FROM $tbl");
 	}
-	
-	
-	
+
+	public function rekapBaju($thn){
+		return $this->db->query("SELECT size_baju as ukuran, COUNT(*) as jumlah
+			FROM seragam WHERE periode='$thn'
+			GROUP BY size_baju ORDER BY jumlah DESC");
+	}
+
+	public function rekapCelana($thn){
+		return $this->db->query("SELECT size_celana as ukuran, COUNT(*) as jumlah
+			FROM seragam WHERE periode='$thn'
+			GROUP BY size_celana ORDER BY jumlah DESC");
+	}
+
+	public function belumIsiTahun($thn){
+		return $this->db->query("SELECT k.nama_karyawan, k.kd_bagian
+			FROM karyawan k
+			WHERE k.kondisi='AKTIF'
+			AND k.id_karyawan NOT IN (SELECT idkaryawan FROM seragam WHERE periode='$thn')
+			ORDER BY k.nama_karyawan");
+	}
+
 }

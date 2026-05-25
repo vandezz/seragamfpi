@@ -258,6 +258,21 @@ class Page extends MY_Controller {
 		 
  }
  
+ public function laporan()
+ {
+	 if($this->session->userdata('role') != '1') show_404();
+	 $thn = $this->input->get('periode') ?: date('Y');
+	 $data['thn']        = $thn;
+	 $data['periode_list'] = $this->UserModel->disting('seragam','periode');
+	 $data['total_k']    = $this->UserModel->gws('karyawan','kondisi','AKTIF')->num_rows();
+	 $data['sudah']      = $this->UserModel->seragamlist($thn)->num_rows();
+	 $data['rekap_baju'] = $this->UserModel->rekapBaju($thn);
+	 $data['rekap_celana'] = $this->UserModel->rekapCelana($thn);
+	 $data['belum_list'] = $this->UserModel->belumIsiTahun($thn);
+	 $data['pageScripts'] = '<script src="'.base_url('js/Chart.min.js').'"></script>';
+	 $this->render_backend('laporan', $data);
+ }
+
  public function unduh()
  {
 	// echo "aneh";
