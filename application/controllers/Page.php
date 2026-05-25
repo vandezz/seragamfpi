@@ -51,13 +51,10 @@ class Page extends MY_Controller {
 	  $data['g']= $this->UserModel->seragamlist($th);
 	  $data['c']= $this->UserModel->seragamlist($th)->num_rows();
 	  $data['k'] =$this->UserModel->gwssort('karyawan','KONDISI','aktif','nama_karyawan');
+	  $data['total_k'] = $data['k']->num_rows();
 	  $data['p'] = $this->UserModel->disting('seragam','periode');
-	 // $data['belum']=$this->UserModel->belumisi();
 	
-    // function render_backend tersebut dari file core/MY_Controller.php
-    //$this->render_backend('pengguna',$data); // load view pengguna.php
-	//$this->render_backend('admin',$data); // load view pengguna.php
-	$this->load->view('admin',$data); // load view admin.php
+	  $this->render_backend('admin',$data); // load view admin.php
   }
   
   
