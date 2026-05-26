@@ -138,9 +138,9 @@ $msg_err = $this->session->flashdata('msg_error');
                 <td><?= htmlspecialchars($k->kd_bagian ?? '') ?></td>
                 <td class="text-center">
                   <?php if($k->jns_kelamin === 'Laki-laki'): ?>
-                    <i class="fas fa-mars text-primary" title="Laki-laki"></i>
+                    <span class="badge badge-primary">Pria</span>
                   <?php else: ?>
-                    <i class="fas fa-venus text-danger" title="Perempuan"></i>
+                    <span class="badge badge-danger">Wanita</span>
                   <?php endif; ?>
                 </td>
                 <td class="text-center">
