@@ -1,0 +1,11 @@
+{
+    "name": "vandezz/seragamfpi",
+    "description": "Seragam FPI Application",
+    "type": "project",
+    "require": {
+        "php": ">=7.2"
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}
