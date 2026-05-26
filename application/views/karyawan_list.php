@@ -55,18 +55,38 @@ $msg_err = $this->session->flashdata('msg_error');
   <div class="col-12">
     <div class="card card-outline card-primary mb-0">
       <div class="card-body py-2">
-        <form method="get" action="<?= base_url('page/mKaryawan') ?>" class="form-inline flex-wrap">
-          <div class="input-group input-group-sm mr-2 mb-1">
+        <form method="get" action="<?= base_url('page/mKaryawan') ?>" class="d-flex flex-wrap align-items-center gap-2">
+          <!-- Baris 1: Search + Status + JK -->
+          <div class="input-group input-group-sm mr-2 mb-1" style="width:200px">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
-            <input type="text" name="search" class="form-control" style="width:200px"
+            <input type="text" name="search" class="form-control"
                    placeholder="Cari nama karyawan..." value="<?= htmlspecialchars($keyword) ?>">
           </div>
-          <select name="kondisi" class="form-control form-control-sm mr-2 mb-1">
-            <option value="semua"   <?= ($kondisi=='semua')   ? 'selected' : '' ?>>Semua Status</option>
-            <option value="AKTIF"   <?= ($kondisi=='AKTIF')   ? 'selected' : '' ?>>Aktif</option>
-            <option value="NONAKTIF" <?= ($kondisi=='NONAKTIF') ? 'selected' : '' ?>>Nonaktif</option>
+          <select name="kondisi" class="form-control form-control-sm mr-2 mb-1" style="width:130px">
+            <option value="semua"    <?= ($kondisi=='semua')    ? 'selected':'' ?>>Semua Status</option>
+            <option value="AKTIF"    <?= ($kondisi=='AKTIF')    ? 'selected':'' ?>>Aktif</option>
+            <option value="NONAKTIF" <?= ($kondisi=='NONAKTIF') ? 'selected':'' ?>>Nonaktif</option>
+          </select>
+          <select name="jk" class="form-control form-control-sm mr-2 mb-1" style="width:110px">
+            <option value=""          <?= ($jk=='')          ? 'selected':'' ?>>Semua JK</option>
+            <option value="Laki-laki" <?= ($jk=='Laki-laki') ? 'selected':'' ?>>Pria</option>
+            <option value="Perempuan" <?= ($jk=='Perempuan')  ? 'selected':'' ?>>Wanita</option>
+          </select>
+          <select name="bagian" class="form-control form-control-sm mr-2 mb-1" style="width:110px">
+            <option value="">Semua Bagian</option>
+            <?php foreach($bagian_list as $b): ?>
+            <option value="<?= htmlspecialchars($b->kd_bagian) ?>" <?= ($bagian===$b->kd_bagian) ? 'selected':'' ?>>
+              <?= htmlspecialchars($b->kd_bagian) ?>
+            </option>
+            <?php endforeach; ?>
+          </select>
+          <select name="tipe" class="form-control form-control-sm mr-2 mb-1" style="width:115px">
+            <option value="" <?= ($tipe=='') ? 'selected':'' ?>>Semua Tipe</option>
+            <option value="F" <?= ($tipe=='F') ? 'selected':'' ?>>Factory</option>
+            <option value="O" <?= ($tipe=='O') ? 'selected':'' ?>>Office</option>
+            <option value="W" <?= ($tipe=='W') ? 'selected':'' ?>>Wearpak</option>
           </select>
           <button type="submit" class="btn btn-primary btn-sm mr-2 mb-1">
             <i class="fas fa-filter mr-1"></i>Filter
@@ -90,11 +110,18 @@ $msg_err = $this->session->flashdata('msg_error');
       <div class="card-header">
         <h3 class="card-title">
           <i class="fas fa-id-card mr-2"></i>Daftar Karyawan
-          <?php if($keyword || $kondisi !== 'semua'): ?>
+          <?php if($keyword || $kondisi !== 'semua' || $jk || $bagian || $tipe): ?>
           <small class="text-muted ml-2">
             (<?= $total ?> hasil
-            <?= $keyword ? 'pencarian "'.htmlspecialchars($keyword).'"' : '' ?>
-            <?= ($kondisi !== 'semua') ? '— '.htmlspecialchars($kondisi) : '' ?>)
+            <?php
+              $tags = [];
+              if($keyword)              $tags[] = '"'.htmlspecialchars($keyword).'"';
+              if($kondisi !== 'semua')  $tags[] = htmlspecialchars($kondisi);
+              if($jk)                   $tags[] = ($jk === 'Laki-laki') ? 'Pria' : 'Wanita';
+              if($bagian)               $tags[] = htmlspecialchars($bagian);
+              if($tipe) { $tipeLabel = ['F'=>'Factory','O'=>'Office','W'=>'Wearpak']; $tags[] = $tipeLabel[$tipe] ?? $tipe; }
+              if($tags) echo '— ' . implode(', ', $tags);
+            ?>)
           </small>
           <?php endif; ?>
         </h3>

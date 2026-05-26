@@ -323,17 +323,27 @@ GROUP BY nama
 
 	// ── Manajemen Karyawan ─────────────────────────────────────────
 
-	public function karyawanCount($keyword = '', $kondisi = 'semua') {
-		if($kondisi !== 'semua') $this->db->where('kondisi', strtoupper($kondisi));
+	public function karyawanBagian() {
+		return $this->db->select('kd_bagian')->distinct()->order_by('kd_bagian ASC')->get('karyawan')->result();
+	}
+
+	public function karyawanCount($keyword = '', $kondisi = 'semua', $jk = '', $bagian = '', $tipe = '') {
+		if($kondisi !== 'semua') $this->db->where('TRIM(kondisi)', strtoupper($kondisi));
 		if($keyword  !== '')     $this->db->like('nama_karyawan', $keyword);
+		if($jk       !== '')     $this->db->where('jns_kelamin', $jk);
+		if($bagian   !== '')     $this->db->where('kd_bagian', $bagian);
+		if($tipe     !== '')     $this->db->where('seragam_office', $tipe);
 		$this->db->from('karyawan');
 		return $this->db->count_all_results();
 	}
 
-	public function karyawanPaged($limit, $offset, $keyword = '', $kondisi = 'semua') {
-		if($kondisi !== 'semua') $this->db->where('kondisi', strtoupper($kondisi));
+	public function karyawanPaged($limit, $offset, $keyword = '', $kondisi = 'semua', $jk = '', $bagian = '', $tipe = '') {
+		if($kondisi !== 'semua') $this->db->where('TRIM(kondisi)', strtoupper($kondisi));
 		if($keyword  !== '')     $this->db->like('nama_karyawan', $keyword);
-		$this->db->order_by('FIELD(kondisi,"AKTIF","NONAKTIF"), nama_karyawan ASC');
+		if($jk       !== '')     $this->db->where('jns_kelamin', $jk);
+		if($bagian   !== '')     $this->db->where('kd_bagian', $bagian);
+		if($tipe     !== '')     $this->db->where('seragam_office', $tipe);
+		$this->db->order_by('FIELD(TRIM(kondisi),"AKTIF","NONAKTIF"), nama_karyawan ASC');
 		$this->db->limit($limit, $offset);
 		return $this->db->get('karyawan');
 	}

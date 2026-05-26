@@ -610,24 +610,31 @@ $(function(){
 
 		$keyword  = $this->input->get('search')  ?: '';
 		$kondisi  = $this->input->get('kondisi') ?: 'AKTIF';
+		$jk       = $this->input->get('jk')      ?: '';
+		$bagian   = $this->input->get('bagian')  ?: '';
+		$tipe     = $this->input->get('tipe')    ?: '';
 		$per_page = 20;
 		$page     = max(1, (int)($this->input->get('page') ?: 1));
 		$offset   = ($page - 1) * $per_page;
-		$total    = $this->UserModel->karyawanCount($keyword, $kondisi);
+		$total    = $this->UserModel->karyawanCount($keyword, $kondisi, $jk, $bagian, $tipe);
 
 		$this->pagination->initialize(
-			$this->_paginationConfig(base_url('index.php/page/mKaryawan'), $total, $per_page)
+			$this->_paginationConfig(base_url('page/mKaryawan'), $total, $per_page)
 		);
 
-		$data['list']     = $this->UserModel->karyawanPaged($per_page, $offset, $keyword, $kondisi);
-		$data['total']    = $total;
-		$data['aktif']    = $this->UserModel->karyawanCount('', 'AKTIF');
-		$data['nonaktif'] = $this->UserModel->karyawanCount('', 'NONAKTIF');
-		$data['keyword']  = $keyword;
-		$data['kondisi']  = $kondisi;
-		$data['offset']   = $offset;
-		$data['per_page'] = $per_page;
-		$data['paginasi'] = $this->pagination->create_links();
+		$data['list']      = $this->UserModel->karyawanPaged($per_page, $offset, $keyword, $kondisi, $jk, $bagian, $tipe);
+		$data['total']     = $total;
+		$data['aktif']     = $this->UserModel->karyawanCount('', 'AKTIF');
+		$data['nonaktif']  = $this->UserModel->karyawanCount('', 'NONAKTIF');
+		$data['keyword']   = $keyword;
+		$data['kondisi']   = $kondisi;
+		$data['jk']        = $jk;
+		$data['bagian']    = $bagian;
+		$data['tipe']      = $tipe;
+		$data['bagian_list'] = $this->UserModel->karyawanBagian();
+		$data['offset']    = $offset;
+		$data['per_page']  = $per_page;
+		$data['paginasi']  = $this->pagination->create_links();
 		$this->render_backend('karyawan_list', $data);
 	}
 
