@@ -50,6 +50,35 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
   </div>
 </div>
 
+<!-- Progress Bar Status Pengisian -->
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="card card-outline card-success mb-0">
+      <div class="card-body py-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="font-weight-bold"><i class="fas fa-tasks mr-1"></i>Status Pengisian Seragam <?= $thn ?></span>
+          <span class="font-weight-bold text-<?= $pct >= 100 ? 'success' : ($pct >= 50 ? 'primary' : 'warning') ?>">
+            <?= $sudah ?> / <?= $total ?> karyawan (<?= $pct ?>%)
+          </span>
+        </div>
+        <div class="progress" style="height:22px;">
+          <div class="progress-bar progress-bar-striped bg-<?= $pct >= 100 ? 'success' : ($pct >= 50 ? 'primary' : 'warning') ?>"
+               role="progressbar"
+               style="width:<?= $pct ?>%"
+               aria-valuenow="<?= $pct ?>" aria-valuemin="0" aria-valuemax="100">
+            <?php if($pct > 10): ?><?= $pct ?>%<?php endif; ?>
+          </div>
+        </div>
+        <?php if($belum > 0): ?>
+        <small class="text-muted mt-1 d-block"><i class="fas fa-exclamation-circle text-warning mr-1"></i><?= $belum ?> karyawan belum mengisi</small>
+        <?php else: ?>
+        <small class="text-success mt-1 d-block"><i class="fas fa-check-circle mr-1"></i>Semua karyawan sudah mengisi!</small>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Chart + Tools Row -->
 <div class="row">
 
@@ -57,7 +86,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
   <div class="col-12 col-md-5">
     <div class="card card-primary card-outline">
       <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i>Statistik Pengisian <?= date('Y') ?></h3>
+        <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i>Statistik Pengisian <?= $thn ?></h3>
       </div>
       <div class="card-body text-center">
         <canvas id="donutChart" style="max-height:280px;"></canvas>

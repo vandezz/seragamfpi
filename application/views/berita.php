@@ -163,17 +163,11 @@ $default_celana = !empty($ds->size_celana)? $ds->size_celana: (!empty($lalu->siz
 			if((date('Y-m-d')< $tglmax) || ($this->session->userdata('role') == '1'))
 			{ ?>
 			<tr>
-				<td colspan='3' align='center'><input class="btn btn-success" type='submit'
-				<?php 
-				if(!empty($ds->size_baju))
-				{
-					echo "value='Update'>";
-				}
-				else
-				{
-					echo "value='Submit'>";
-				}
-				?>
+				<td colspan='3' align='center'>
+					<button type="button" class="btn btn-success" id="btn-konfirmasi"
+						data-toggle="modal" data-target="#modalKonfirmasi">
+						<?php echo !empty($ds->size_baju) ? '<i class="fas fa-save mr-1"></i>Update' : '<i class="fas fa-paper-plane mr-1"></i>Submit'; ?>
+					</button>
 				</td>
 			</tr>
 			<?php 
@@ -219,3 +213,48 @@ $default_celana = !empty($ds->size_celana)? $ds->size_celana: (!empty($lalu->siz
 </div>
 </div>
 </div>
+
+<!-- Modal Konfirmasi Submit -->
+<div class="modal fade" id="modalKonfirmasi" tabindex="-1" role="dialog" aria-labelledby="labelKonfirmasi" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="labelKonfirmasi"><i class="fas fa-check-circle mr-2"></i>Konfirmasi Data Seragam</h5>
+        <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3 text-muted">Pastikan ukuran sudah benar sebelum disimpan.</p>
+        <table class="table table-sm table-bordered mb-0">
+          <tbody>
+            <tr><th class="w-40">Ukuran Baju</th><td id="k-baju">-</td></tr>
+            <tr><th>Lengan</th><td id="k-lengan">-</td></tr>
+            <tr><th>Ukuran Celana</th><td id="k-celana">-</td></tr>
+            <tr><th>Keterangan</th><td id="k-ket" style="white-space:pre-wrap">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times mr-1"></i>Batal</button>
+        <button type="button" class="btn btn-success" id="btn-simpan"><i class="fas fa-save mr-1"></i>Ya, Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  document.getElementById('btn-konfirmasi').addEventListener('click', function(){
+    var baju   = document.getElementById('sizebaju');
+    var lengan = document.getElementById('lengan');
+    var celana = document.getElementById('sizecelana');
+    var ket    = document.getElementById('keterangan');
+    document.getElementById('k-baju').textContent   = baju   ? baju.options[baju.selectedIndex].text    : '-';
+    document.getElementById('k-lengan').textContent = lengan ? lengan.options[lengan.selectedIndex].text : '-';
+    document.getElementById('k-celana').textContent = celana ? celana.options[celana.selectedIndex].text : '-';
+    document.getElementById('k-ket').textContent    = ket    ? (ket.value.trim() || '-')                 : '-';
+  });
+  document.getElementById('btn-simpan').addEventListener('click', function(){
+    document.getElementById('fukuran').submit();
+  });
+})();
+</script>
