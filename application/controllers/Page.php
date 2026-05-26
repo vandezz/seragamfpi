@@ -295,15 +295,51 @@ class Page extends MY_Controller {
  public function laporan()
  {
 	 if($this->session->userdata('role') != '1') show_404();
-	 $thn = $this->input->get('periode') ?: date('Y');
-	 $data['thn']        = $thn;
-	 $data['periode_list'] = $this->UserModel->disting('seragam','periode');
-	 $data['total_k']    = $this->UserModel->gws('karyawan','kondisi','AKTIF')->num_rows();
-	 $data['sudah']      = $this->UserModel->seragamlist($thn)->num_rows();
-	 $data['rekap_baju'] = $this->UserModel->rekapBaju($thn);
-	 $data['rekap_celana'] = $this->UserModel->rekapCelana($thn);
-	 $data['belum_list'] = $this->UserModel->belumIsiTahun($thn);
-	 $data['pageScripts'] = '<script src="'.base_url('js/Chart.min.js').'"></script>';
+
+	 $this->load->library('pagination');
+
+	 $thn      = $this->input->get('periode') ?: date('Y');
+	 $per_page = 15;
+	 $page     = max(1, (int)($this->input->get('page') ?: 1));
+	 $offset   = ($page - 1) * $per_page;
+	 $belum_total = $this->UserModel->belumIsiTahunCount($thn);
+
+	 $config['base_url']             = base_url('index.php/page/laporan');
+	 $config['total_rows']           = $belum_total;
+	 $config['per_page']             = $per_page;
+	 $config['use_page_numbers']     = TRUE;
+	 $config['page_query_string']    = TRUE;
+	 $config['query_string_segment'] = 'page';
+	 $config['reuse_query_string']   = TRUE;
+	 $config['full_tag_open']        = '<ul class="pagination pagination-sm mb-0">';
+	 $config['full_tag_close']       = '</ul>';
+	 $config['attributes']           = array('class' => 'page-link');
+	 $config['num_tag_open']         = '<li class="page-item">';
+	 $config['num_tag_close']        = '</li>';
+	 $config['cur_tag_open']         = '<li class="page-item active"><span class="page-link">';
+	 $config['cur_tag_close']        = '</span></li>';
+	 $config['prev_link']            = '&laquo;';
+	 $config['next_link']            = '&raquo;';
+	 $config['prev_tag_open']        = '<li class="page-item">';
+	 $config['prev_tag_close']       = '</li>';
+	 $config['next_tag_open']        = '<li class="page-item">';
+	 $config['next_tag_close']       = '</li>';
+	 $config['first_link']           = FALSE;
+	 $config['last_link']            = FALSE;
+	 $this->pagination->initialize($config);
+
+	 $data['thn']            = $thn;
+	 $data['periode_list']   = $this->UserModel->disting('seragam','periode');
+	 $data['total_k']        = $this->UserModel->gws('karyawan','kondisi','AKTIF')->num_rows();
+	 $data['sudah']          = $this->UserModel->seragamlist($thn)->num_rows();
+	 $data['rekap_baju']     = $this->UserModel->rekapBaju($thn);
+	 $data['rekap_celana']   = $this->UserModel->rekapCelana($thn);
+	 $data['belum_list']     = $this->UserModel->belumIsiTahunPaged($thn, $per_page, $offset);
+	 $data['belum_total']    = $belum_total;
+	 $data['belum_offset']   = $offset;
+	 $data['per_page']       = $per_page;
+	 $data['paginasi_belum'] = $this->pagination->create_links();
+	 $data['pageScripts']    = '<script src="'.base_url('js/Chart.min.js').'"></script>';
 	 $this->render_backend('laporan', $data);
  }
 

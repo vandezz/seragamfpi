@@ -300,4 +300,25 @@ GROUP BY nama
 		);
 	}
 
+	public function belumIsiTahunCount($thn){
+		return $this->db->query(
+			"SELECT COUNT(*) as total FROM karyawan k
+			WHERE k.kondisi = 'AKTIF'
+			AND k.id_karyawan NOT IN (SELECT idkaryawan FROM seragam WHERE periode = ?)",
+			array($thn)
+		)->row()->total;
+	}
+
+	public function belumIsiTahunPaged($thn, $limit, $offset){
+		return $this->db->query(
+			"SELECT k.nama_karyawan, k.kd_bagian
+			FROM karyawan k
+			WHERE k.kondisi = 'AKTIF'
+			AND k.id_karyawan NOT IN (SELECT idkaryawan FROM seragam WHERE periode = ?)
+			ORDER BY k.nama_karyawan
+			LIMIT ? OFFSET ?",
+			array($thn, $limit, $offset)
+		);
+	}
+
 }

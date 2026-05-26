@@ -198,7 +198,7 @@ $belum_rows = $belum_list->result();
   <div class="col-12">
     <div class="card card-outline card-warning">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title"><i class="fas fa-user-times mr-1"></i>Karyawan Belum Mengisi (<?= $thn ?>) — <?= count($belum_rows) ?> orang</h3>
+        <h3 class="card-title"><i class="fas fa-user-times mr-1"></i>Karyawan Belum Mengisi (<?= $thn ?>) — <?= $belum_total ?> orang</h3>
         <button class="btn btn-sm btn-warning" onclick="window.print()">
           <i class="fas fa-print mr-1"></i>Print
         </button>
@@ -212,7 +212,7 @@ $belum_rows = $belum_list->result();
             <tbody>
               <?php if(empty($belum_rows)): ?>
               <tr><td colspan="3" class="text-center text-success"><i class="fas fa-check-circle mr-1"></i>Semua karyawan sudah mengisi!</td></tr>
-              <?php else: $no=1; foreach($belum_rows as $b): ?>
+              <?php else: $no = $belum_offset + 1; foreach($belum_rows as $b): ?>
               <tr>
                 <td><?= $no++ ?></td>
                 <td><?= htmlspecialchars($b->nama_karyawan) ?></td>
@@ -223,6 +223,15 @@ $belum_rows = $belum_list->result();
           </table>
         </div>
       </div>
+      <?php if($belum_total > $per_page): ?>
+      <div class="card-footer d-flex justify-content-between align-items-center py-2">
+        <small class="text-muted">
+          Menampilkan <?= $belum_offset + 1 ?>&#8211;<?= min($belum_offset + $per_page, $belum_total) ?>
+          dari <strong><?= $belum_total ?></strong> data
+        </small>
+        <nav><?= $paginasi_belum ?></nav>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>
