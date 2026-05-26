@@ -138,6 +138,28 @@ class UserModel extends CI_Model {
 		);
 		return $f;
 	}
+
+	public function seragamlistCount($thn){
+		$this->db->from('karyawan a');
+		$this->db->join('seragam b', 'a.id_karyawan = b.idkaryawan');
+		$this->db->where('b.periode', $thn);
+		return $this->db->count_all_results();
+	}
+
+	public function seragamlistPaged($thn, $limit, $offset){
+		return $this->db->query(
+			"SELECT a.id_karyawan as 'idk', a.nama_karyawan as 'Nama', a.kd_bagian as 'Bagian',
+				b.size_baju as 'Sizebaju', b.lengan as 'Lengan',
+				b.size_celana as 'SizeCelana', b.bahan_celana as 'BahanCelana', b.bahan_baju as 'BahanBaju',
+				b.jenis_celana as 'JenisCelana', b.jenis_baju as 'JenisBaju', b.keterangan as 'Ket',
+				b.periode as 'periode', b.idseragam as 'idseragam'
+			FROM karyawan a, seragam b
+			WHERE a.id_karyawan = b.idkaryawan AND b.periode = ?
+			ORDER BY a.nama_karyawan ASC
+			LIMIT ? OFFSET ?",
+			array($thn, $limit, $offset)
+		);
+	}
 	
 	
 	public function allseragamlist(){

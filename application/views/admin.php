@@ -162,7 +162,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
   <div class="col-12">
     <div class="card card-primary card-outline">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title"><i class="fas fa-table mr-2"></i>Data Seragam <?= date('Y') ?></h3>
+        <h3 class="card-title"><i class="fas fa-table mr-2"></i>Data Seragam <?= $thn ?></h3>
         <a href="<?= base_url('index.php/page/unduh') ?>" class="btn btn-success btn-sm">
           <i class="fas fa-download mr-1"></i>Unduh
         </a>
@@ -182,7 +182,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
               </tr>
             </thead>
             <tbody>
-              <?php $no = 1; foreach($g->result() as $sl): ?>
+              <?php $no = $offset + 1; foreach($g->result() as $sl): ?>
               <tr>
                 <td><?= $no++ ?></td>
                 <td><?= htmlspecialchars($sl->Nama) ?></td>
@@ -201,6 +201,15 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
           </table>
         </div>
       </div>
+      <?php if($total_seragam > $per_page): ?>
+      <div class="card-footer d-flex justify-content-between align-items-center py-2">
+        <small class="text-muted">
+          Menampilkan <?= $offset + 1 ?>–<?= min($offset + $per_page, $total_seragam) ?>
+          dari <strong><?= $total_seragam ?></strong> data
+        </small>
+        <nav><?= $paginasi ?></nav>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </div>

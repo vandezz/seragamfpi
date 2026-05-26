@@ -44,23 +44,57 @@ class Page extends MY_Controller {
   }
 
   public function pengguna(){
-	 
-    if($this->session->userdata('role') != '1') // Jika user yg login bukan admin
-      show_404(); // Redirect ke halaman 404 Not found
-	  $th = date('Y');
-	  $data['g']= $this->UserModel->seragamlist($th);
-	  $data['c']= $this->UserModel->seragamlist($th)->num_rows();
-	  $data['k'] =$this->UserModel->gwssort('karyawan','KONDISI','aktif','nama_karyawan');
-	  $data['total_k'] = $data['k']->num_rows();
-	  $data['p'] = $this->UserModel->disting('seragam','periode');
-	
-	  $this->render_backend('admin',$data); // load view admin.php
+    if($this->session->userdata('role') != '1') show_404();
+
+    $this->load->library('pagination');
+
+    $thn      = $this->input->get('periode') ?: date('Y');
+    $per_page = 15;
+    $page     = max(1, (int)($this->input->get('page') ?: 1));
+    $offset   = ($page - 1) * $per_page;
+    $total    = $this->UserModel->seragamlistCount($thn);
+
+    $config['base_url']             = base_url('index.php/page/pengguna');
+    $config['total_rows']           = $total;
+    $config['per_page']             = $per_page;
+    $config['use_page_numbers']     = TRUE;
+    $config['page_query_string']    = TRUE;
+    $config['query_string_segment'] = 'page';
+    $config['reuse_query_string']   = TRUE;
+    $config['full_tag_open']        = '<ul class="pagination pagination-sm mb-0">';
+    $config['full_tag_close']       = '</ul>';
+    $config['attributes']           = array('class' => 'page-link');
+    $config['num_tag_open']         = '<li class="page-item">';
+    $config['num_tag_close']        = '</li>';
+    $config['cur_tag_open']         = '<li class="page-item active"><span class="page-link">';
+    $config['cur_tag_close']        = '</span></li>';
+    $config['prev_link']            = '&laquo;';
+    $config['next_link']            = '&raquo;';
+    $config['prev_tag_open']        = '<li class="page-item">';
+    $config['prev_tag_close']       = '</li>';
+    $config['next_tag_open']        = '<li class="page-item">';
+    $config['next_tag_close']       = '</li>';
+    $config['first_link']           = FALSE;
+    $config['last_link']            = FALSE;
+    $this->pagination->initialize($config);
+
+    $data['g']             = $this->UserModel->seragamlistPaged($thn, $per_page, $offset);
+    $data['c']             = $total;
+    $data['thn']           = $thn;
+    $data['offset']        = $offset;
+    $data['per_page']      = $per_page;
+    $data['total_seragam'] = $total;
+    $data['paginasi']      = $this->pagination->create_links();
+    $data['k']             = $this->UserModel->gwssort('karyawan','KONDISI','aktif','nama_karyawan');
+    $data['total_k']       = $data['k']->num_rows();
+    $data['p']             = $this->UserModel->disting('seragam','periode');
+
+    $this->render_backend('admin', $data);
   }
-  
-  
+
   public function showseragamperiode(){
-	  $thn = $this->input->post('periode');
-   $this->pengguna($thn);
+    $thn = $this->input->post('periode');
+    redirect('index.php/page/pengguna?periode=' . urlencode($thn));
   }
   
   public function compareseragam()
