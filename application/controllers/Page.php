@@ -609,7 +609,7 @@ $(function(){
 		$this->load->library('pagination');
 
 		$keyword  = $this->input->get('search')  ?: '';
-		$kondisi  = $this->input->get('kondisi') ?: 'semua';
+		$kondisi  = $this->input->get('kondisi') ?: 'AKTIF';
 		$per_page = 20;
 		$page     = max(1, (int)($this->input->get('page') ?: 1));
 		$offset   = ($page - 1) * $per_page;
