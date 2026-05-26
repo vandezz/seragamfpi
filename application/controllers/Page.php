@@ -99,6 +99,7 @@ class Page extends MY_Controller {
   
   public function compareseragam()
   {
+	  if($this->session->userdata('role') != '1') show_404();
 	  $data['periode'] = $this->UserModel->disting('seragam','periode');
 	  $data['dt'] = $this->UserModel->allseragamlist();
 	  
