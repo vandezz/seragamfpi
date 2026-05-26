@@ -10,29 +10,65 @@ class UserModel extends CI_Model {
     }
 	
 	public function cek($v,$thn){
-		
-		$result = $this->db->query("SELECT * FROM seragam WHERE idkaryawan='$v' AND periode='$thn'");
-		
+		$this->db->where('idkaryawan', $v);
+		$this->db->where('periode', $thn);
+		$result = $this->db->get('seragam');
 		return $result;
 	}
 	
 	public function isi($idk,$sbaju,$lengan,$scelana,$bahancelana,$bahanbaju,$jeniscelana,$jenisbaju,$ket,$idkom,$tm,$thnow){
-		$entri = $this->db->query("INSERT INTO seragam(idkaryawan,size_baju,lengan,size_celana,bahan_celana,bahan_baju,jenis_celana,jenis_baju,keterangan,idkomputer,timestamp,periode)
-		VALUES('$idk','$sbaju','$lengan','$scelana','$bahancelana','$bahanbaju','$jeniscelana','$jenisbaju','$ket','$idkom',$tm,$thnow)");
+		$data = array(
+			'idkaryawan'   => $idk,
+			'size_baju'    => $sbaju,
+			'lengan'       => $lengan,
+			'size_celana'  => $scelana,
+			'bahan_celana' => $bahancelana,
+			'bahan_baju'   => $bahanbaju,
+			'jenis_celana' => $jeniscelana,
+			'jenis_baju'   => $jenisbaju,
+			'keterangan'   => $ket,
+			'idkomputer'   => $idkom,
+			'timestamp'    => $tm,
+			'periode'      => $thnow,
+		);
+		$entri = $this->db->insert('seragam', $data);
 		return $entri;
 	}
 	
 	public function supdate($idk,$sbaju,$lengan,$scelana,$bahancelana,$bahanbaju,$jeniscelana,$jenisbaju,$ket,$idkom,$tm){
-		$u = $this->db->query("UPDATE seragam SET size_baju='$sbaju',lengan='$lengan',size_celana='$scelana',timestamp='$tm',
-			bahan_celana='$bahancelana',bahan_baju='$bahanbaju',jenis_celana='$jeniscelana',jenis_baju='$jenisbaju',keterangan='$ket',idkomputer='$idkom'
-			WHERE idkaryawan='$idk'");
+		$data = array(
+			'size_baju'    => $sbaju,
+			'lengan'       => $lengan,
+			'size_celana'  => $scelana,
+			'timestamp'    => $tm,
+			'bahan_celana' => $bahancelana,
+			'bahan_baju'   => $bahanbaju,
+			'jenis_celana' => $jeniscelana,
+			'jenis_baju'   => $jenisbaju,
+			'keterangan'   => $ket,
+			'idkomputer'   => $idkom,
+		);
+		$this->db->where('idkaryawan', $idk);
+		$u = $this->db->update('seragam', $data);
 		return $u;
 	}
 	
 	public function supdateW($idk,$sbaju,$lengan,$scelana,$bahancelana,$bahanbaju,$jeniscelana,$jenisbaju,$ket,$idkom,$tm,$prd){
-		$u = $this->db->query("UPDATE seragam SET size_baju='$sbaju',lengan='$lengan',size_celana='$scelana',timestamp='$tm',
-			bahan_celana='$bahancelana',bahan_baju='$bahanbaju',jenis_celana='$jeniscelana',jenis_baju='$jenisbaju',keterangan='$ket',idkomputer='$idkom'
-			WHERE idkaryawan='$idk' AND periode='$prd'");
+		$data = array(
+			'size_baju'    => $sbaju,
+			'lengan'       => $lengan,
+			'size_celana'  => $scelana,
+			'timestamp'    => $tm,
+			'bahan_celana' => $bahancelana,
+			'bahan_baju'   => $bahanbaju,
+			'jenis_celana' => $jeniscelana,
+			'jenis_baju'   => $jenisbaju,
+			'keterangan'   => $ket,
+			'idkomputer'   => $idkom,
+		);
+		$this->db->where('idkaryawan', $idk);
+		$this->db->where('periode', $prd);
+		$u = $this->db->update('seragam', $data);
 		return $u;
 	}
 	
@@ -85,19 +121,21 @@ class UserModel extends CI_Model {
 	
 	public function update($idk,$data,$table)
     {
-		return $this->db->query("UPDATE $table SET password='$data' WHERE id_karyawan='$idk'");
-		
-         //id apa yang mau di update, lalu DATA apa yang mau dikirim ke tabel di database
-        //$this->db->where('id_karyawan',$idk);
-        //$this->db->update($table,$data);
+		$this->db->where('id_karyawan', $idk);
+		return $this->db->update($table, array('password' => $data));
     }
 	
 	public function seragamlist($thn){
-		$f=$this->db->query("SELECT a.id_karyawan as 'idk', a.nama_karyawan as 'Nama', a.kd_bagian as 'Bagian',b.size_baju as 'Sizebaju', b.lengan as 'Lengan',
-				b.size_celana as 'SizeCelana', b.bahan_celana as 'BahanCelana', b.bahan_baju as 'BahanBaju', 
-				b.jenis_celana as 'JenisCelana',b.jenis_baju as 'JenisBaju', b.keterangan as 'Ket', b.periode as 'periode',b.idseragam as 'idseragam'
-				FROM karyawan a, seragam b
-				WHERE a.id_karyawan=b.idkaryawan AND periode='$thn'");
+		$f = $this->db->query(
+			"SELECT a.id_karyawan as 'idk', a.nama_karyawan as 'Nama', a.kd_bagian as 'Bagian',
+				b.size_baju as 'Sizebaju', b.lengan as 'Lengan',
+				b.size_celana as 'SizeCelana', b.bahan_celana as 'BahanCelana', b.bahan_baju as 'BahanBaju',
+				b.jenis_celana as 'JenisCelana', b.jenis_baju as 'JenisBaju', b.keterangan as 'Ket',
+				b.periode as 'periode', b.idseragam as 'idseragam'
+			FROM karyawan a, seragam b
+			WHERE a.id_karyawan = b.idkaryawan AND b.periode = ?",
+			array($thn)
+		);
 		return $f;
 	}
 	
@@ -141,74 +179,103 @@ GROUP BY nama
 	}
 	
 	public function updatepass($np,$idk){
-		return $this->db->query("UPDATE karyawan SET password='$np' WHERE id_karyawan=$idk");
+		$this->db->where('id_karyawan', $idk);
+		return $this->db->update('karyawan', array('password' => $np));
 	}
 	
 	public function yangbelum($pd){
-		return $this->db->query("SELECT nama_karyawan FROM `karyawan` 
-				LEFT JOIN seragam
-				ON karyawan.id_karyawan=seragam.idkaryawan
-				where  seragam.idkaryawan IS NULL
-				and karyawan.kondisi='AKTIF' 
-				AND seragam.periode='$pd'
-				ORDER BY karyawan.nama_karyawan");
+		return $this->db->query(
+			"SELECT nama_karyawan FROM karyawan
+			LEFT JOIN seragam ON karyawan.id_karyawan = seragam.idkaryawan
+			WHERE seragam.idkaryawan IS NULL
+			AND karyawan.kondisi = 'AKTIF'
+			AND seragam.periode = ?
+			ORDER BY karyawan.nama_karyawan",
+			array($pd)
+		);
 	}
 	
 	public function yangbelum2()
 	{
-		$thisyear = date("Y");
+		$thisyear = (int) date('Y');
 		$lastyear = $thisyear - 1;
-		
-		return $this->db->query("SELECT seragam.idkaryawan,karyawan.nama_karyawan 
-		FROM seragam INNER JOIN karyawan ON seragam.idkaryawan=karyawan.id_karyawan WHERE periode='$lastyear'
-		except (select seragam.idkaryawan,karyawan.nama_karyawan from seragam INNER JOIN karyawan ON seragam.idkaryawan=karyawan.id_karyawan where periode='$thisyear')");
-		
+		return $this->db->query(
+			"SELECT seragam.idkaryawan, karyawan.nama_karyawan
+			FROM seragam INNER JOIN karyawan ON seragam.idkaryawan = karyawan.id_karyawan
+			WHERE periode = ?
+			EXCEPT (
+				SELECT seragam.idkaryawan, karyawan.nama_karyawan
+				FROM seragam INNER JOIN karyawan ON seragam.idkaryawan = karyawan.id_karyawan
+				WHERE periode = ?
+			)",
+			array($lastyear, $thisyear)
+		);
 	}
 	public function showlike($tb,$f1,$v1,$f2,$v2){
-		return $this->db->query("SELECT * FROM $tb WHERE $f1 LIKE '%$v1%' AND $f2='$v2'");
+		$this->db->like($f1, $v1);
+		$this->db->where($f2, $v2);
+		return $this->db->get($tb);
 	}
 	
 	public function showall($tbl){
-		return $this->db->query("SELECT * FROM $tbl");
+		return $this->db->get($tbl);
 	}
 
 	public function updateparam($t)
 	{
-		$this->db->query("UPDATE seragam_param SET tanggalmax='$t'");
+		$this->db->update('seragam_param', array('tanggalmax' => $t));
 	}
 	
 	public function sejarahseragam($idk)
 	{
-		return $this->db->query("SELECT * FROM seragam where idkaryawan=$idk");
+		$this->db->where('idkaryawan', $idk);
+		return $this->db->get('seragam');
 	}
 	
 	public function updateseragam($ids,$sbaju,$scelana,$ket){
-		$u = $this->db->query("UPDATE seragam SET size_baju='$sbaju',size_celana='$scelana', keterangan='$ket'	WHERE idseragam='$ids'");
+		$data = array(
+			'size_baju'   => $sbaju,
+			'size_celana' => $scelana,
+			'keterangan'  => $ket,
+		);
+		$this->db->where('idseragam', $ids);
+		$u = $this->db->update('seragam', $data);
 		return $u;
 	}
 	
 	public function disting($tbl,$f){
-		return $h = $this->db->query("SELECT DISTINCT $f FROM $tbl");
+		$this->db->distinct();
+		$this->db->select($f);
+		return $this->db->get($tbl);
 	}
 
 	public function rekapBaju($thn){
-		return $this->db->query("SELECT size_baju as ukuran, COUNT(*) as jumlah
-			FROM seragam WHERE periode='$thn'
-			GROUP BY size_baju ORDER BY jumlah DESC");
+		return $this->db->query(
+			"SELECT size_baju as ukuran, COUNT(*) as jumlah
+			FROM seragam WHERE periode = ?
+			GROUP BY size_baju ORDER BY jumlah DESC",
+			array($thn)
+		);
 	}
 
 	public function rekapCelana($thn){
-		return $this->db->query("SELECT size_celana as ukuran, COUNT(*) as jumlah
-			FROM seragam WHERE periode='$thn'
-			GROUP BY size_celana ORDER BY jumlah DESC");
+		return $this->db->query(
+			"SELECT size_celana as ukuran, COUNT(*) as jumlah
+			FROM seragam WHERE periode = ?
+			GROUP BY size_celana ORDER BY jumlah DESC",
+			array($thn)
+		);
 	}
 
 	public function belumIsiTahun($thn){
-		return $this->db->query("SELECT k.nama_karyawan, k.kd_bagian
+		return $this->db->query(
+			"SELECT k.nama_karyawan, k.kd_bagian
 			FROM karyawan k
-			WHERE k.kondisi='AKTIF'
-			AND k.id_karyawan NOT IN (SELECT idkaryawan FROM seragam WHERE periode='$thn')
-			ORDER BY k.nama_karyawan");
+			WHERE k.kondisi = 'AKTIF'
+			AND k.id_karyawan NOT IN (SELECT idkaryawan FROM seragam WHERE periode = ?)
+			ORDER BY k.nama_karyawan",
+			array($thn)
+		);
 	}
 
 }
