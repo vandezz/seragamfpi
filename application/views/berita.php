@@ -147,7 +147,7 @@ $default_celana = !empty($ds->size_celana)? $ds->size_celana: (!empty($lalu->siz
 			</tr>
 			
 			
-		<?php
+		<?php }
 			$keterangan = !empty($ds->keterangan) ? $ds->keterangan : (!empty($lalu->keterangan) ? $lalu->keterangan : '');
 		?>
 			<tr>
