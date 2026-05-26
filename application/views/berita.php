@@ -14,6 +14,11 @@
 
 <div class="table-responsive">
 <form name="fukuran" id="fukuran" action="<?=base_url();?>index.php/page/ukuran" method="post">
+<?php
+$default_baju   = !empty($ds->size_baju)  ? $ds->size_baju  : (!empty($lalu->size_baju)  ? $lalu->size_baju  : '');
+$default_lengan = !empty($ds->lengan)     ? $ds->lengan     : (!empty($lalu->lengan)     ? $lalu->lengan     : '');
+$default_celana = !empty($ds->size_celana)? $ds->size_celana: (!empty($lalu->size_celana)? $lalu->size_celana: '');
+?>
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
@@ -29,27 +34,19 @@
                 <td>Ukuran BAJU</td>
                 <td> 
 				<select class="form-control" name="sizebaju" id="sizebaju">
-				<?php 
-				if(!empty($ds->size_baju)){
-					echo "<option value='".$ds->size_baju."' selected>".$ds->size_baju."</option>";
-				}?>
-				  <option value="S">S</option>
-				  <option value="M">M</option>
-				  <option value="L">L</option>
-				  <option value="XL">XL</option>
-				  <option value="XXL">XXL</option>
-				  <option value="XXXL">XXXL</option>
-				  <option value="other">Other</option>
+				  <option value="S" <?=($default_baju=='S'?'selected':'')?>>S</option>
+				  <option value="M" <?=($default_baju=='M'?'selected':'')?>>M</option>
+				  <option value="L" <?=($default_baju=='L'?'selected':'')?>>L</option>
+				  <option value="XL" <?=($default_baju=='XL'?'selected':'')?>>XL</option>
+				  <option value="XXL" <?=($default_baju=='XXL'?'selected':'')?>>XXL</option>
+				  <option value="XXXL" <?=($default_baju=='XXXL'?'selected':'')?>>XXXL</option>
+				  <option value="other" <?=($default_baju=='other'?'selected':'')?>>Other</option>
 				</select> 
 				</td>
                 <td>
 					<select class="form-control" name="lengan" id="lengan">
-						<?php 
-						if(!empty($ds->lengan)){
-						echo "<option value='".$ds->lengan."' selected>".$ds->lengan."</option>";
-						}?>
-						<option value="Lengan Pendek">Lengan Pendek</option>
-						<option value="Lengan Panjang">Lengan Panjang</option>
+						<option value="Lengan Pendek" <?=($default_lengan=='Lengan Pendek'?'selected':'')?>>Lengan Pendek</option>
+						<option value="Lengan Panjang" <?=($default_lengan=='Lengan Panjang'?'selected':'')?>>Lengan Panjang</option>
 					</select>
 				</td>
 				<td bgcolor='#f2f3f4'>
@@ -95,18 +92,18 @@
                 <td>Ukuran BAJU</td>
                 <td> 
 				<select class="form-control" name="sizebaju" id="sizebaju">
-				  <option value="S">S</option>
-				  <option value="M">M</option>
-				  <option value="L">L</option>
-				  <option value="XL">XL</option>
-				  <option value="XXL">XXL</option>
-				  <option value="XXXL">XXXL</option>
-				  <option value="other">Other</option>
+				  <option value="S" <?=($default_baju=='S'?'selected':'')?>>S</option>
+				  <option value="M" <?=($default_baju=='M'?'selected':'')?>>M</option>
+				  <option value="L" <?=($default_baju=='L'?'selected':'')?>>L</option>
+				  <option value="XL" <?=($default_baju=='XL'?'selected':'')?>>XL</option>
+				  <option value="XXL" <?=($default_baju=='XXL'?'selected':'')?>>XXL</option>
+				  <option value="XXXL" <?=($default_baju=='XXXL'?'selected':'')?>>XXXL</option>
+				  <option value="other" <?=($default_baju=='other'?'selected':'')?>>Other</option>
 				</select> </td>
                 <td>
 					<select class="form-control" name="lengan" id="lengan">
-						<option value="Lengan Panjang">Lengan Panjang</option>
-						<option value="Lengan Pendek">Lengan Pendek</option>
+						<option value="Lengan Panjang" <?=($default_lengan=='Lengan Panjang'?'selected':'')?>>Lengan Panjang</option>
+						<option value="Lengan Pendek" <?=($default_lengan=='Lengan Pendek'?'selected':'')?>>Lengan Pendek</option>
 					</select>
 				</td>
 				<td>
@@ -119,29 +116,28 @@
 				</td>
 				<td>
 					<select class="form-control" name="sizecelana" id="sizecelana">
-						<option value="27">27</option>
-						<option value="28">28</option>
-						<option value="29">29</option>
-						<option value="30">30</option>
-						<option value="31">31</option>
-						<option value="32">32</option>
-						<option value="33">33</option>
-						<option value="34">34</option>
-						<option value="35">35</option>
-						<option value="36">36</option>
-						<option value="37">37</option>
-						<option value="38">38</option>
-						<option value="39">39</option>
-						<option value="40">40</option>
-						<option value="41">41</option>
-						<option value="42">42</option>
-						<option value="43">43</option>
-						<option value="44">44</option>
-						<option value="45">45</option>
-						<option value="46">46</option>
-						<option value="47">47</option>
-						<option value="other">Other</option>
-						
+					<option value="27" <?=($default_celana=='27'?'selected':'')?>>27</option>
+					<option value="28" <?=($default_celana=='28'?'selected':'')?>>28</option>
+					<option value="29" <?=($default_celana=='29'?'selected':'')?>>29</option>
+					<option value="30" <?=($default_celana=='30'?'selected':'')?>>30</option>
+					<option value="31" <?=($default_celana=='31'?'selected':'')?>>31</option>
+					<option value="32" <?=($default_celana=='32'?'selected':'')?>>32</option>
+					<option value="33" <?=($default_celana=='33'?'selected':'')?>>33</option>
+					<option value="34" <?=($default_celana=='34'?'selected':'')?>>34</option>
+					<option value="35" <?=($default_celana=='35'?'selected':'')?>>35</option>
+					<option value="36" <?=($default_celana=='36'?'selected':'')?>>36</option>
+					<option value="37" <?=($default_celana=='37'?'selected':'')?>>37</option>
+					<option value="38" <?=($default_celana=='38'?'selected':'')?>>38</option>
+					<option value="39" <?=($default_celana=='39'?'selected':'')?>>39</option>
+					<option value="40" <?=($default_celana=='40'?'selected':'')?>>40</option>
+					<option value="41" <?=($default_celana=='41'?'selected':'')?>>41</option>
+					<option value="42" <?=($default_celana=='42'?'selected':'')?>>42</option>
+					<option value="43" <?=($default_celana=='43'?'selected':'')?>>43</option>
+					<option value="44" <?=($default_celana=='44'?'selected':'')?>>44</option>
+					<option value="45" <?=($default_celana=='45'?'selected':'')?>>45</option>
+					<option value="46" <?=($default_celana=='46'?'selected':'')?>>46</option>
+					<option value="47" <?=($default_celana=='47'?'selected':'')?>>47</option>
+					<option value="other" <?=($default_celana=='other'?'selected':'')?>>Other</option>
 					</select>
 				</td>
 				<td></td>
@@ -151,13 +147,8 @@
 			</tr>
 			
 			
-		<?php } 
-			if(empty($ds->keterangan)){
-				$keterangan = '';
-			}
-			else{
-				$keterangan = $ds->keterangan;
-			}
+		<?php
+			$keterangan = !empty($ds->keterangan) ? $ds->keterangan : (!empty($lalu->keterangan) ? $lalu->keterangan : '');
 		?>
 			<tr>
 				<td>Keterangan</td>
