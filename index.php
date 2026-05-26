@@ -1,4 +1,5 @@
 <?php
+ob_start(); // buffer output so session can start even if PHP outputs warnings
 /**
  * CodeIgniter
  *
@@ -58,7 +59,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');
 
 /*
  *---------------------------------------------------------------
