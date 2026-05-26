@@ -619,7 +619,7 @@ $(function(){
 			$this->_paginationConfig(base_url('index.php/page/mKaryawan'), $total, $per_page)
 		);
 
-		$data['list']     = $this->UserModel->karyawanPaged($keyword, $kondisi, $per_page, $offset);
+		$data['list']     = $this->UserModel->karyawanPaged($per_page, $offset, $keyword, $kondisi);
 		$data['total']    = $total;
 		$data['aktif']    = $this->UserModel->karyawanCount('', 'AKTIF');
 		$data['nonaktif'] = $this->UserModel->karyawanCount('', 'NONAKTIF');

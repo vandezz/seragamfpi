@@ -330,7 +330,7 @@ GROUP BY nama
 		return $this->db->count_all_results();
 	}
 
-	public function karyawanPaged($keyword = '', $kondisi = 'semua', $limit, $offset) {
+	public function karyawanPaged($limit, $offset, $keyword = '', $kondisi = 'semua') {
 		if($kondisi !== 'semua') $this->db->where('kondisi', strtoupper($kondisi));
 		if($keyword  !== '')     $this->db->like('nama_karyawan', $keyword);
 		$this->db->order_by('FIELD(kondisi,"AKTIF","NONAKTIF"), nama_karyawan ASC');
