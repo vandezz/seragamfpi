@@ -66,7 +66,7 @@
       <div class="card-body text-center py-4">
         <i class="fas fa-exclamation-circle fa-3x text-danger mb-3 d-block"></i>
         <h5 class="text-danger">Anda belum mengisi Ukuran Seragam</h5>
-        <a href="<?php echo base_url('index.php/page/berita'); ?>" class="btn btn-success mt-2">
+        <a href="<?php echo base_url('page/berita'); ?>" class="btn btn-success mt-2">
           <i class="fas fa-plus-circle mr-1"></i> Isi Form Seragam
         </a>
       </div>

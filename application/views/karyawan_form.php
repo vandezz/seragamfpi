@@ -2,8 +2,8 @@
 $is_edit    = ($mode === 'edit');
 $title      = $is_edit ? 'Edit Karyawan' : 'Tambah Karyawan Baru';
 $action_url = $is_edit
-    ? base_url('index.php/page/mkUpdate')
-    : base_url('index.php/page/mkSimpan');
+    ? base_url('page/mkUpdate')
+    : base_url('page/mkSimpan');
 
 $msg_err = $this->session->flashdata('msg_error');
 
@@ -136,7 +136,7 @@ $v = function($field) use ($k) {
           <button type="submit" class="btn btn-primary mr-2">
             <i class="fas fa-save mr-1"></i><?= $is_edit ? 'Simpan Perubahan' : 'Tambah Karyawan' ?>
           </button>
-          <a href="<?= base_url('index.php/page/mKaryawan') ?>" class="btn btn-secondary">
+          <a href="<?= base_url('page/mKaryawan') ?>" class="btn btn-secondary">
             <i class="fas fa-times mr-1"></i>Batal
           </a>
         </div>

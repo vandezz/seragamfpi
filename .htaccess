@@ -1,0 +1,9 @@
+Options -Indexes
+RewriteEngine On
+
+# Izinkan akses langsung ke file/folder yang ada (assets, css, js, dll)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Semua request lainnya diteruskan ke index.php
+RewriteRule ^(.*)$ index.php/$1 [L]

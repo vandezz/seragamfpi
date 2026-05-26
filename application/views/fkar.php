@@ -73,7 +73,7 @@ $dk->free_result();
           <?php foreach($dkr->result() as $k): ?>
           <tr>
             <td><?= $no++ ?></td>
-            <td><a href="<?= base_url('index.php/page/ckary/'.$k->id_karyawan) ?>"><?= $k->nama_karyawan ?></a></td>
+            <td><a href="<?= base_url('page/ckary/'.$k->id_karyawan) ?>"><?= $k->nama_karyawan ?></a></td>
           </tr>
           <?php endforeach; ?>
         </tbody>
@@ -86,6 +86,6 @@ $dk->free_result();
 <script>
 /* Employee data for autocomplete - no jQuery needed */
 window._employees = <?= json_encode($karyawan_list) ?>;
-window._ckarBase  = '<?= base_url('index.php/page/ckary/') ?>';
-window._ckarxUrl  = '<?= base_url('index.php/page/ckarx') ?>';
+window._ckarBase  = '<?= base_url('page/ckary/') ?>';
+window._ckarxUrl  = '<?= base_url('page/ckarx') ?>';
 </script>

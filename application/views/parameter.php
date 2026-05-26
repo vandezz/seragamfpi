@@ -8,7 +8,7 @@
       </div>
       <div class="card-body">
         <p class="text-muted mb-3">Atur batas tanggal terakhir karyawan dapat mengisi form seragam.</p>
-        <form action="<?= base_url('index.php/page/xtanggalmax') ?>" method="post">
+        <form action="<?= base_url('page/xtanggalmax') ?>" method="post">
           <div class="form-group">
             <label>Tanggal Maksimal</label>
             <div class="input-group date" id="datepicker" data-target-input="nearest">

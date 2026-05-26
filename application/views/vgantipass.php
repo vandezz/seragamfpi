@@ -8,7 +8,7 @@
       </div>
       <div class="card-body">
         <p class="text-muted">Hai <strong><?= $data['nama']; ?></strong>, silakan ganti password Anda.</p>
-        <form action="<?= base_url('index.php/page/gantipasswordx'); ?>" method="POST">
+        <form action="<?= base_url('page/gantipasswordx'); ?>" method="POST">
           <div class="form-group">
             <label>Password Baru</label>
             <div class="input-group">

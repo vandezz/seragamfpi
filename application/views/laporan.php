@@ -16,7 +16,7 @@ $belum_rows = $belum_list->result();
   <div class="col-12">
     <div class="card card-outline card-primary mb-0">
       <div class="card-body py-2">
-        <form method="get" action="<?= base_url('index.php/page/laporan') ?>" class="form-inline">
+        <form method="get" action="<?= base_url('page/laporan') ?>" class="form-inline">
           <label class="mr-2 font-weight-bold">Periode:</label>
           <select name="periode" class="form-control form-control-sm mr-2" onchange="this.form.submit()">
             <?php foreach($periode_list->result() as $p): ?>
@@ -25,7 +25,7 @@ $belum_rows = $belum_list->result();
           </select>
           <span class="text-muted ml-2" style="font-size:13px">Menampilkan data tahun <strong><?= $thn ?></strong></span>
         </form>
-        <a href="<?= base_url('index.php/page/exportExcel?periode=' . $thn) ?>" class="btn btn-success btn-sm mt-2 mt-md-0 float-md-right">
+        <a href="<?= base_url('page/exportExcel?periode=' . $thn) ?>" class="btn btn-success btn-sm mt-2 mt-md-0 float-md-right">
           <i class="fas fa-file-excel mr-1"></i>Export Excel
         </a>
       </div>

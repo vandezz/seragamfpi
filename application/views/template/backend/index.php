@@ -26,7 +26,7 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="<?php echo base_url('index.php/page/home'); ?>" class="nav-link">
+        <a href="<?php echo base_url('page/home'); ?>" class="nav-link">
           <i class="fas fa-home mr-1"></i> Home
         </a>
       </li>
@@ -39,7 +39,7 @@
         </span>
       </li>
       <li class="nav-item">
-        <a href="<?php echo base_url('index.php/auth/logout'); ?>" class="nav-link">
+        <a href="<?php echo base_url('auth/logout'); ?>" class="nav-link">
           <i class="fas fa-sign-out-alt mr-1"></i> Logout
         </a>
       </li>
@@ -48,7 +48,7 @@
 
   <!-- Sidebar -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="<?php echo base_url('index.php/page/home'); ?>" class="brand-link">
+    <a href="<?php echo base_url('page/home'); ?>" class="brand-link">
       <img src="<?php echo base_url('assets/img/uniform.png'); ?>" alt="FPI Logo" class="brand-image img-circle elevation-3" style="opacity:.8">
       <span class="brand-text font-weight-light">SeragamFPI</span>
     </a>
@@ -80,7 +80,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="<?php echo base_url('index.php/page/home'); ?>">Home</a></li>
+              <li class="breadcrumb-item"><a href="<?php echo base_url('page/home'); ?>">Home</a></li>
               <li class="breadcrumb-item active">PT. Fuji Presisi-Tool Indonesia</li>
             </ol>
           </div>

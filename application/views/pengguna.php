@@ -1,5 +1,5 @@
 <div class="pull-right">
-    <a href="<?php echo base_url('index.php/page/unduh');?>" class="btn btn-success">Export Excel</a>
+    <a href="<?php echo base_url('page/unduh');?>" class="btn btn-success">Export Excel</a>
 
 </div>
 

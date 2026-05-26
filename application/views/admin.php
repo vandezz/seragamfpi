@@ -25,7 +25,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
         <p>Belum Mengisi</p>
       </div>
       <div class="icon"><i class="fas fa-clock"></i></div>
-      <a href="<?= base_url('index.php/page/yangbelum') ?>" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
+      <a href="<?= base_url('page/yangbelum') ?>" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
     </div>
   </div>
   <div class="col-6 col-lg-3">
@@ -109,7 +109,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
             <h3 class="card-title"><i class="fas fa-key mr-2"></i>Reset Password Karyawan</h3>
           </div>
           <div class="card-body">
-            <form action="<?= base_url('index.php/page/resetpassword') ?>" method="post">
+            <form action="<?= base_url('page/resetpassword') ?>" method="post">
               <div class="form-row align-items-end">
                 <div class="col-12 col-sm-6 mb-2">
                   <label class="mb-1">Pilih Karyawan</label>
@@ -142,7 +142,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
           </div>
           <div class="card-body py-2">
             <p class="mb-2 text-muted" style="font-size:13px">Atur batas tanggal maksimal pengisian form seragam.</p>
-            <a href="<?= base_url('index.php/page/rubahtanggalmax') ?>" class="btn btn-danger btn-sm">
+            <a href="<?= base_url('page/rubahtanggalmax') ?>" class="btn btn-danger btn-sm">
               <i class="fas fa-edit mr-1"></i>Ubah Tanggal Maksimal
             </a>
           </div>
@@ -156,7 +156,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
             <h3 class="card-title"><i class="fas fa-calendar-alt mr-2"></i>Lihat Data Periode Lain</h3>
           </div>
           <div class="card-body">
-            <form action="<?= base_url('index.php/page/showseragamperiode') ?>" method="post">
+            <form action="<?= base_url('page/showseragamperiode') ?>" method="post">
               <div class="form-row align-items-end">
                 <div class="col-8 col-sm-6 mb-2">
                   <label class="mb-1">Pilih Periode</label>
@@ -172,7 +172,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
                   </button>
                 </div>
                 <div class="col-12 col-sm-3 mb-2">
-                  <a href="<?= base_url('index.php/page/compareseragam') ?>" class="btn btn-info btn-sm btn-block">
+                  <a href="<?= base_url('page/compareseragam') ?>" class="btn btn-info btn-sm btn-block">
                     <i class="fas fa-exchange-alt mr-1"></i>Compare
                   </a>
                 </div>
@@ -192,7 +192,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
     <div class="card card-primary card-outline">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title"><i class="fas fa-table mr-2"></i>Data Seragam <?= $thn ?></h3>
-        <a href="<?= base_url('index.php/page/unduh') ?>" class="btn btn-success btn-sm">
+        <a href="<?= base_url('page/unduh') ?>" class="btn btn-success btn-sm">
           <i class="fas fa-download mr-1"></i>Unduh
         </a>
       </div>
@@ -220,7 +220,7 @@ $pct_blm = ($total > 0) ? round(($belum / $total) * 100, 1) : 0;
                 <td><?= $sl->SizeCelana ?></td>
                 <td><?= $sl->Ket ?></td>
                 <td>
-                  <a href="<?= base_url('index.php/page/editukuran/'.$sl->idseragam.'/'.$sl->Nama) ?>" class="btn btn-info btn-xs">
+                  <a href="<?= base_url('page/editukuran/'.$sl->idseragam.'/'.$sl->Nama) ?>" class="btn btn-info btn-xs">
                     <i class="fas fa-edit"></i>
                   </a>
                 </td>

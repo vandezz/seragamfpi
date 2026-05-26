@@ -76,7 +76,7 @@ $total_p = count($periods);
         <h3 class="card-title">
           <i class="fas fa-exchange-alt mr-2"></i>Perbandingan Ukuran Seragam Antar Periode
         </h3>
-        <a href="<?= base_url('index.php/page/pengguna') ?>" class="btn btn-sm btn-secondary">
+        <a href="<?= base_url('page/pengguna') ?>" class="btn btn-sm btn-secondary">
           <i class="fas fa-arrow-left mr-1"></i>Kembali
         </a>
       </div>

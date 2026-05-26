@@ -1,8 +1,8 @@
 <div class="pull-right">
-	<a href="<?php echo base_url('index.php/page/editkary/'); echo $d->id_karyawan;?>" class="btn btn-warning">EDIT</a>
+	<a href="<?php echo base_url('page/editkary/'); echo $d->id_karyawan;?>" class="btn btn-warning">EDIT</a>
 </div>
 <div class="pull-right">
-    <a href="<?php echo base_url('index.php/page/unduh');?>" class="btn btn-success">Export Excel</a>
+    <a href="<?php echo base_url('page/unduh');?>" class="btn btn-success">Export Excel</a>
 
 </div>
 

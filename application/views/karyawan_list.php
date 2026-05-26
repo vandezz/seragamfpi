@@ -34,7 +34,7 @@ $msg_err = $this->session->flashdata('msg_error');
     <div class="small-box bg-success">
       <div class="inner"><h3><?= $aktif_count ?></h3><p>Aktif</p></div>
       <div class="icon"><i class="fas fa-user-check"></i></div>
-      <a href="<?= base_url('index.php/page/mKaryawan?kondisi=AKTIF') ?>" class="small-box-footer">
+      <a href="<?= base_url('page/mKaryawan?kondisi=AKTIF') ?>" class="small-box-footer">
         Filter Aktif <i class="fas fa-arrow-circle-right"></i>
       </a>
     </div>
@@ -43,7 +43,7 @@ $msg_err = $this->session->flashdata('msg_error');
     <div class="small-box bg-secondary">
       <div class="inner"><h3><?= $nonaktif_count ?></h3><p>Nonaktif</p></div>
       <div class="icon"><i class="fas fa-user-times"></i></div>
-      <a href="<?= base_url('index.php/page/mKaryawan?kondisi=NONAKTIF') ?>" class="small-box-footer">
+      <a href="<?= base_url('page/mKaryawan?kondisi=NONAKTIF') ?>" class="small-box-footer">
         Filter Nonaktif <i class="fas fa-arrow-circle-right"></i>
       </a>
     </div>
@@ -55,7 +55,7 @@ $msg_err = $this->session->flashdata('msg_error');
   <div class="col-12">
     <div class="card card-outline card-primary mb-0">
       <div class="card-body py-2">
-        <form method="get" action="<?= base_url('index.php/page/mKaryawan') ?>" class="form-inline flex-wrap">
+        <form method="get" action="<?= base_url('page/mKaryawan') ?>" class="form-inline flex-wrap">
           <div class="input-group input-group-sm mr-2 mb-1">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -71,10 +71,10 @@ $msg_err = $this->session->flashdata('msg_error');
           <button type="submit" class="btn btn-primary btn-sm mr-2 mb-1">
             <i class="fas fa-filter mr-1"></i>Filter
           </button>
-          <a href="<?= base_url('index.php/page/mKaryawan') ?>" class="btn btn-secondary btn-sm mr-2 mb-1">
+          <a href="<?= base_url('page/mKaryawan') ?>" class="btn btn-secondary btn-sm mr-2 mb-1">
             <i class="fas fa-times mr-1"></i>Reset
           </a>
-          <a href="<?= base_url('index.php/page/mkTambah') ?>" class="btn btn-success btn-sm mb-1 ml-auto">
+          <a href="<?= base_url('page/mkTambah') ?>" class="btn btn-success btn-sm mb-1 ml-auto">
             <i class="fas fa-user-plus mr-1"></i>Tambah Karyawan
           </a>
         </form>
@@ -164,18 +164,18 @@ $msg_err = $this->session->flashdata('msg_error');
                   <?php endif; ?>
                 </td>
                 <td class="text-center">
-                  <a href="<?= base_url('index.php/page/mkEdit/'.$k->id_karyawan) ?>"
+                  <a href="<?= base_url('page/mkEdit/'.$k->id_karyawan) ?>"
                      class="btn btn-xs btn-info" title="Edit">
                     <i class="fas fa-edit"></i>
                   </a>
                   <?php if(trim(strtoupper($k->kondisi)) === 'AKTIF'): ?>
-                  <a href="<?= base_url('index.php/page/mkToggle/'.$k->id_karyawan) ?>"
+                  <a href="<?= base_url('page/mkToggle/'.$k->id_karyawan) ?>"
                      class="btn btn-xs btn-warning" title="Nonaktifkan"
                      onclick="return confirm('Nonaktifkan karyawan <?= addslashes(htmlspecialchars($k->nama_karyawan)) ?>?')">
                     <i class="fas fa-user-slash"></i>
                   </a>
                   <?php else: ?>
-                  <a href="<?= base_url('index.php/page/mkToggle/'.$k->id_karyawan) ?>"
+                  <a href="<?= base_url('page/mkToggle/'.$k->id_karyawan) ?>"
                      class="btn btn-xs btn-success" title="Aktifkan"
                      onclick="return confirm('Aktifkan kembali karyawan <?= addslashes(htmlspecialchars($k->nama_karyawan)) ?>?')">
                     <i class="fas fa-user-check"></i>

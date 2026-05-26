@@ -1,4 +1,4 @@
-<form method="post" action="<?php echo base_url('index.php/auth/login'); ?>">
+<form method="post" action="<?php echo base_url('auth/login'); ?>">
   <div class="input-group mb-3">
     <input type="text" name="username" class="form-control" placeholder="Nomor Induk Karyawan" autofocus>
     <div class="input-group-append">
