@@ -25,6 +25,9 @@ $belum_rows = $belum_list->result();
           </select>
           <span class="text-muted ml-2" style="font-size:13px">Menampilkan data tahun <strong><?= $thn ?></strong></span>
         </form>
+        <a href="<?= base_url('index.php/page/exportExcel?periode=' . $thn) ?>" class="btn btn-success btn-sm mt-2 mt-md-0 float-md-right">
+          <i class="fas fa-file-excel mr-1"></i>Export Excel
+        </a>
       </div>
     </div>
   </div>

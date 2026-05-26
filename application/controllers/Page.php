@@ -273,6 +273,74 @@ class Page extends MY_Controller {
 	 $this->render_backend('laporan', $data);
  }
 
+ public function exportExcel()
+ {
+     if($this->session->userdata('role') != '1') show_404();
+
+     $thn = $this->input->get('periode') ?: date('Y');
+
+     $rekap_baju   = $this->UserModel->rekapBaju($thn)->result();
+     $rekap_celana = $this->UserModel->rekapCelana($thn)->result();
+     $belum_list   = $this->UserModel->belumIsiTahun($thn)->result();
+     $sudah        = $this->UserModel->seragamlist($thn)->num_rows();
+
+     $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+     $spreadsheet->getProperties()
+         ->setTitle('Laporan Seragam ' . $thn)
+         ->setCreator('SeragamFPI');
+
+     // ── Sheet 1: Rekap Ukuran Baju ──────────────────────────────
+     $sheet1 = $spreadsheet->getActiveSheet()->setTitle('Rekap Baju');
+     $sheet1->fromArray(['Ukuran Baju', 'Jumlah', 'Persentase (%)'], NULL, 'A1');
+     $sheet1->getStyle('A1:C1')->getFont()->setBold(true);
+     $row = 2;
+     foreach ($rekap_baju as $r) {
+         $pct = ($sudah > 0) ? round($r->jumlah / $sudah * 100, 1) : 0;
+         $sheet1->fromArray([$r->ukuran, (int)$r->jumlah, $pct], NULL, 'A' . $row++);
+     }
+     $sheet1->fromArray(['Total', $sudah, 100], NULL, 'A' . $row);
+     $sheet1->getStyle('A' . $row . ':C' . $row)->getFont()->setBold(true);
+
+     // ── Sheet 2: Rekap Ukuran Celana ────────────────────────────
+     $sheet2 = $spreadsheet->createSheet()->setTitle('Rekap Celana');
+     $sheet2->fromArray(['Ukuran Celana', 'Jumlah', 'Persentase (%)'], NULL, 'A1');
+     $sheet2->getStyle('A1:C1')->getFont()->setBold(true);
+     $row = 2;
+     foreach ($rekap_celana as $r) {
+         $pct = ($sudah > 0) ? round($r->jumlah / $sudah * 100, 1) : 0;
+         $sheet2->fromArray([$r->ukuran, (int)$r->jumlah, $pct], NULL, 'A' . $row++);
+     }
+     $sheet2->fromArray(['Total', $sudah, 100], NULL, 'A' . $row);
+     $sheet2->getStyle('A' . $row . ':C' . $row)->getFont()->setBold(true);
+
+     // ── Sheet 3: Belum Mengisi ───────────────────────────────────
+     $sheet3 = $spreadsheet->createSheet()->setTitle('Belum Mengisi');
+     $sheet3->fromArray(['No', 'Nama Karyawan', 'Bagian'], NULL, 'A1');
+     $sheet3->getStyle('A1:C1')->getFont()->setBold(true);
+     $no = 1;
+     foreach ($belum_list as $b) {
+         $sheet3->fromArray([$no++, $b->nama_karyawan, $b->kd_bagian], NULL, 'A' . $no);
+     }
+
+     // Auto-size columns for all sheets
+     foreach ($spreadsheet->getAllSheets() as $sheet) {
+         foreach (range('A', 'C') as $col) {
+             $sheet->getColumnDimension($col)->setAutoSize(true);
+         }
+     }
+
+     $spreadsheet->setActiveSheetIndex(0);
+
+     $filename = 'Laporan-Seragam-' . $thn . '.xlsx';
+     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+     header('Content-Disposition: attachment; filename="' . $filename . '"');
+     header('Cache-Control: max-age=0');
+
+     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+     $writer->save('php://output');
+     exit;
+ }
+
  public function unduh()
  {
 	// echo "aneh";

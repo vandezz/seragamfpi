@@ -3,7 +3,8 @@
     "description": "Seragam FPI Application",
     "type": "project",
     "require": {
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "phpoffice/phpspreadsheet": "^5.7"
     },
     "config": {
         "preferred-install": "dist"
