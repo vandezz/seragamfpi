@@ -574,6 +574,141 @@ $(function(){
 		
 	
 	}
-	
- 
+
+	// ── Manajemen Karyawan ─────────────────────────────────────────
+
+	private function _paginationConfig($base_url, $total, $per_page) {
+		return array(
+			'base_url'             => $base_url,
+			'total_rows'           => $total,
+			'per_page'             => $per_page,
+			'use_page_numbers'     => TRUE,
+			'page_query_string'    => TRUE,
+			'query_string_segment' => 'page',
+			'reuse_query_string'   => TRUE,
+			'full_tag_open'        => '<ul class="pagination pagination-sm mb-0">',
+			'full_tag_close'       => '</ul>',
+			'attributes'           => array('class' => 'page-link'),
+			'num_tag_open'         => '<li class="page-item">',
+			'num_tag_close'        => '</li>',
+			'cur_tag_open'         => '<li class="page-item active"><span class="page-link">',
+			'cur_tag_close'        => '</span></li>',
+			'prev_link'            => '&laquo;',
+			'next_link'            => '&raquo;',
+			'prev_tag_open'        => '<li class="page-item">',
+			'prev_tag_close'       => '</li>',
+			'next_tag_open'        => '<li class="page-item">',
+			'next_tag_close'       => '</li>',
+			'first_link'           => FALSE,
+			'last_link'            => FALSE,
+		);
+	}
+
+	public function mKaryawan() {
+		if($this->session->userdata('role') != '1') show_404();
+		$this->load->library('pagination');
+
+		$keyword  = $this->input->get('search')  ?: '';
+		$kondisi  = $this->input->get('kondisi') ?: 'semua';
+		$per_page = 20;
+		$page     = max(1, (int)($this->input->get('page') ?: 1));
+		$offset   = ($page - 1) * $per_page;
+		$total    = $this->UserModel->karyawanCount($keyword, $kondisi);
+
+		$this->pagination->initialize(
+			$this->_paginationConfig(base_url('index.php/page/mKaryawan'), $total, $per_page)
+		);
+
+		$data['list']     = $this->UserModel->karyawanPaged($keyword, $kondisi, $per_page, $offset);
+		$data['total']    = $total;
+		$data['aktif']    = $this->UserModel->karyawanCount('', 'AKTIF');
+		$data['nonaktif'] = $this->UserModel->karyawanCount('', 'NONAKTIF');
+		$data['keyword']  = $keyword;
+		$data['kondisi']  = $kondisi;
+		$data['offset']   = $offset;
+		$data['per_page'] = $per_page;
+		$data['paginasi'] = $this->pagination->create_links();
+		$this->render_backend('karyawan_list', $data);
+	}
+
+	public function mkTambah() {
+		if($this->session->userdata('role') != '1') show_404();
+		$data['mode'] = 'tambah';
+		$data['k']    = null;
+		$this->render_backend('karyawan_form', $data);
+	}
+
+	public function mkSimpan() {
+		if($this->session->userdata('role') != '1') show_404();
+
+		$nik  = trim($this->input->post('nik'));
+		$pass = trim($this->input->post('password'));
+
+		// NIK uniqueness check
+		if($this->UserModel->gws('karyawan', 'nik', $nik)->num_rows() > 0) {
+			$this->session->set_flashdata('msg_error', 'NIK "' . htmlspecialchars($nik) . '" sudah digunakan karyawan lain.');
+			redirect('index.php/page/mkTambah');
+		}
+
+		$data = array(
+			'nama_karyawan'  => trim($this->input->post('nama_karyawan')),
+			'nik'            => $nik,
+			'password'       => md5($pass ?: '12345'),
+			'jns_kelamin'    => $this->input->post('jns_kelamin'),
+			'kd_bagian'      => strtoupper(trim($this->input->post('kd_bagian'))),
+			'seragam_office' => $this->input->post('seragam_office'),
+			'id_levell'      => $this->input->post('id_levell'),
+			'kondisi'        => 'AKTIF',
+		);
+		$this->UserModel->tambahKaryawan($data);
+		$this->session->set_flashdata('msg_success', 'Karyawan "' . $data['nama_karyawan'] . '" berhasil ditambahkan.');
+		redirect('index.php/page/mKaryawan');
+	}
+
+	public function mkEdit() {
+		if($this->session->userdata('role') != '1') show_404();
+		$id = $this->uri->segment(3);
+		$data['mode'] = 'edit';
+		$data['k']    = $this->UserModel->showw('karyawan', 'id_karyawan', $id);
+		$this->render_backend('karyawan_form', $data);
+	}
+
+	public function mkUpdate() {
+		if($this->session->userdata('role') != '1') show_404();
+
+		$id  = $this->input->post('id_karyawan');
+		$nik = trim($this->input->post('nik'));
+
+		// NIK uniqueness check (exclude self)
+		$existing = $this->UserModel->showw2('karyawan', 'nik', $nik, 'id_karyawan !=', $id);
+		if($existing) {
+			$this->session->set_flashdata('msg_error', 'NIK "' . htmlspecialchars($nik) . '" sudah digunakan karyawan lain.');
+			redirect('index.php/page/mkEdit/' . $id);
+		}
+
+		$data = array(
+			'nama_karyawan'  => trim($this->input->post('nama_karyawan')),
+			'nik'            => $nik,
+			'jns_kelamin'    => $this->input->post('jns_kelamin'),
+			'kd_bagian'      => strtoupper(trim($this->input->post('kd_bagian'))),
+			'seragam_office' => $this->input->post('seragam_office'),
+			'id_levell'      => $this->input->post('id_levell'),
+			'kondisi'        => $this->input->post('kondisi'),
+		);
+		$pass = trim($this->input->post('password'));
+		if($pass !== '') $data['password'] = md5($pass);
+
+		$this->UserModel->editKaryawan($id, $data);
+		$this->session->set_flashdata('msg_success', 'Data karyawan "' . $data['nama_karyawan'] . '" berhasil diupdate.');
+		redirect('index.php/page/mKaryawan');
+	}
+
+	public function mkToggle() {
+		if($this->session->userdata('role') != '1') show_404();
+		$id = $this->uri->segment(3);
+		$this->UserModel->toggleKondisi($id);
+		$this->session->set_flashdata('msg_success', 'Status karyawan berhasil diubah.');
+		redirect('index.php/page/mKaryawan');
+	}
+
 }

@@ -321,4 +321,37 @@ GROUP BY nama
 		);
 	}
 
+	// ── Manajemen Karyawan ─────────────────────────────────────────
+
+	public function karyawanCount($keyword = '', $kondisi = 'semua') {
+		if($kondisi !== 'semua') $this->db->where('kondisi', strtoupper($kondisi));
+		if($keyword  !== '')     $this->db->like('nama_karyawan', $keyword);
+		$this->db->from('karyawan');
+		return $this->db->count_all_results();
+	}
+
+	public function karyawanPaged($keyword = '', $kondisi = 'semua', $limit, $offset) {
+		if($kondisi !== 'semua') $this->db->where('kondisi', strtoupper($kondisi));
+		if($keyword  !== '')     $this->db->like('nama_karyawan', $keyword);
+		$this->db->order_by('FIELD(kondisi,"AKTIF","NONAKTIF"), nama_karyawan ASC');
+		$this->db->limit($limit, $offset);
+		return $this->db->get('karyawan');
+	}
+
+	public function tambahKaryawan($data) {
+		return $this->db->insert('karyawan', $data);
+	}
+
+	public function editKaryawan($id, $data) {
+		$this->db->where('id_karyawan', $id);
+		return $this->db->update('karyawan', $data);
+	}
+
+	public function toggleKondisi($id) {
+		$row = $this->db->select('kondisi')->where('id_karyawan', $id)->get('karyawan')->row();
+		$new = (strtoupper($row->kondisi) === 'AKTIF') ? 'NONAKTIF' : 'AKTIF';
+		$this->db->where('id_karyawan', $id);
+		return $this->db->update('karyawan', array('kondisi' => $new));
+	}
+
 }
