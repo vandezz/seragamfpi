@@ -94,7 +94,7 @@ class Page extends MY_Controller {
 
   public function showseragamperiode(){
     $thn = $this->input->post('periode');
-    redirect('index.php/page/pengguna?periode=' . urlencode($thn));
+    redirect('page/pengguna?periode=' . urlencode($thn));
   }
   
   public function compareseragam()
@@ -647,7 +647,7 @@ $(function(){
 		// NIK uniqueness check
 		if($this->UserModel->gws('karyawan', 'nik', $nik)->num_rows() > 0) {
 			$this->session->set_flashdata('msg_error', 'NIK "' . htmlspecialchars($nik) . '" sudah digunakan karyawan lain.');
-			redirect('index.php/page/mkTambah');
+			redirect('page/mkTambah');
 		}
 
 		$data = array(
@@ -662,7 +662,7 @@ $(function(){
 		);
 		$this->UserModel->tambahKaryawan($data);
 		$this->session->set_flashdata('msg_success', 'Karyawan "' . $data['nama_karyawan'] . '" berhasil ditambahkan.');
-		redirect('index.php/page/mKaryawan');
+		redirect('page/mKaryawan');
 	}
 
 	public function mkEdit() {
@@ -683,7 +683,7 @@ $(function(){
 		$existing = $this->UserModel->showw2('karyawan', 'nik', $nik, 'id_karyawan !=', $id);
 		if($existing) {
 			$this->session->set_flashdata('msg_error', 'NIK "' . htmlspecialchars($nik) . '" sudah digunakan karyawan lain.');
-			redirect('index.php/page/mkEdit/' . $id);
+			redirect('page/mkEdit/' . $id);
 		}
 
 		$data = array(
@@ -700,7 +700,7 @@ $(function(){
 
 		$this->UserModel->editKaryawan($id, $data);
 		$this->session->set_flashdata('msg_success', 'Data karyawan "' . $data['nama_karyawan'] . '" berhasil diupdate.');
-		redirect('index.php/page/mKaryawan');
+		redirect('page/mKaryawan');
 	}
 
 	public function mkToggle() {
@@ -708,7 +708,7 @@ $(function(){
 		$id = $this->uri->segment(3);
 		$this->UserModel->toggleKondisi($id);
 		$this->session->set_flashdata('msg_success', 'Status karyawan berhasil diubah.');
-		redirect('index.php/page/mKaryawan');
+		redirect('page/mKaryawan');
 	}
 
 }
