@@ -349,7 +349,7 @@ GROUP BY nama
 
 	public function toggleKondisi($id) {
 		$row = $this->db->select('kondisi')->where('id_karyawan', $id)->get('karyawan')->row();
-		$new = (strtoupper($row->kondisi) === 'AKTIF') ? 'NONAKTIF' : 'AKTIF';
+		$new = (trim(strtoupper($row->kondisi)) === 'AKTIF') ? 'NONAKTIF' : 'AKTIF';
 		$this->db->where('id_karyawan', $id);
 		return $this->db->update('karyawan', array('kondisi' => $new));
 	}

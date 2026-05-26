@@ -157,7 +157,7 @@ $msg_err = $this->session->flashdata('msg_error');
                   <?php endif; ?>
                 </td>
                 <td class="text-center">
-                  <?php if(strtoupper($k->kondisi) === 'AKTIF'): ?>
+                  <?php if(trim(strtoupper($k->kondisi)) === 'AKTIF'): ?>
                   <span class="badge badge-success px-2 py-1">Aktif</span>
                   <?php else: ?>
                   <span class="badge badge-secondary px-2 py-1">Nonaktif</span>
@@ -168,7 +168,7 @@ $msg_err = $this->session->flashdata('msg_error');
                      class="btn btn-xs btn-info" title="Edit">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <?php if(strtoupper($k->kondisi) === 'AKTIF'): ?>
+                  <?php if(trim(strtoupper($k->kondisi)) === 'AKTIF'): ?>
                   <a href="<?= base_url('index.php/page/mkToggle/'.$k->id_karyawan) ?>"
                      class="btn btn-xs btn-warning" title="Nonaktifkan"
                      onclick="return confirm('Nonaktifkan karyawan <?= addslashes(htmlspecialchars($k->nama_karyawan)) ?>?')">
