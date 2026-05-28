@@ -256,3 +256,116 @@ $default_celana = !empty($ds->size_celana)? $ds->size_celana: (!empty($lalu->siz
   });
 })();
 </script>
+
+<!-- ===== CHAT WIDGET ===== -->
+<div class="row mt-3">
+<div class="col-12">
+<div class="card card-warning card-outline" id="card-chat">
+  <div class="card-header d-flex justify-content-between align-items-center" style="cursor:pointer" id="chat-toggle-btn">
+    <h3 class="card-title mb-0"><i class="fas fa-comments mr-2"></i>Chat dengan Admin</h3>
+    <span class="badge badge-warning" id="chat-badge" style="display:none"></span>
+  </div>
+  <div class="card-body p-0" id="chat-body" style="display:none">
+    <div id="chat-box"
+         style="height:300px;overflow-y:auto;padding:12px;background:#f9f9f9;border-bottom:1px solid #dee2e6">
+      <p class="text-muted text-center small mt-5" id="chat-empty">Belum ada pesan.</p>
+    </div>
+    <div class="input-group p-2" style="background:#fff">
+      <input type="text" id="chat-input" class="form-control"
+             placeholder="Ketik pesan..." maxlength="500" autocomplete="off">
+      <div class="input-group-append">
+        <button class="btn btn-warning" id="chat-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+  var BASE      = '<?= base_url() ?>';
+  var lastId    = 0;
+  var myRole    = <?= (int)$this->session->userdata('role') ?>;
+  var chatOpen  = false;
+  var pollTimer = null;
+
+  // ----- render -----
+  function renderMsg(m) {
+    var isMine = (m.role === myRole);
+    var side   = isMine ? 'right' : 'left';
+    var bg     = isMine ? '#d4edda' : '#fff';
+    var align  = isMine ? 'text-right' : 'text-left';
+    var el     = document.createElement('div');
+    el.className = 'mb-2 ' + align;
+    el.innerHTML =
+      '<small class="text-muted">' + (isMine ? 'Saya' : '<b>' + m.nama + '</b>') + ' &bull; ' + m.waktu + '</small>' +
+      '<div class="d-inline-block px-3 py-2 rounded" style="background:' + bg + ';max-width:80%;border:1px solid #ced4da;word-break:break-word">' + m.pesan + '</div>';
+    return el;
+  }
+
+  function appendMessages(list) {
+    if(!list.length) return;
+    var box   = document.getElementById('chat-box');
+    var empty = document.getElementById('chat-empty');
+    if(empty) empty.remove();
+    list.forEach(function(m){ box.appendChild(renderMsg(m)); lastId = m.id; });
+    box.scrollTop = box.scrollHeight;
+  }
+
+  // ----- poll -----
+  function poll() {
+    var url = BASE + 'index.php/page/chatAmbil?after_id=' + lastId;
+    <?php if($this->session->userdata('role') == '1'): ?>
+    url += '&id_karyawan=<?= (int)$this->session->userdata('idkaryawan') ?>';
+    <?php endif; ?>
+    fetch(url).then(function(r){ return r.json(); }).then(function(data){
+      if(data && data.length){
+        if(!chatOpen){
+          var badge = document.getElementById('chat-badge');
+          badge.textContent = '+' + data.length;
+          badge.style.display = '';
+        }
+        appendMessages(data);
+      }
+    }).catch(function(){});
+  }
+
+  // ----- toggle buka/tutup -----
+  document.getElementById('chat-toggle-btn').addEventListener('click', function(){
+    chatOpen = !chatOpen;
+    document.getElementById('chat-body').style.display = chatOpen ? '' : 'none';
+    if(chatOpen){
+      document.getElementById('chat-badge').style.display = 'none';
+      document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+    }
+  });
+
+  // ----- kirim -----
+  function kirim(){
+    var input = document.getElementById('chat-input');
+    var pesan = input.value.trim();
+    if(!pesan) return;
+    input.disabled = true;
+    var fd = new FormData();
+    fd.append('pesan', pesan);
+    fetch(BASE + 'index.php/page/chatKirim', {method:'POST', body:fd})
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(res.ok){ input.value = ''; poll(); }
+        else alert('Gagal mengirim: ' + (res.msg || ''));
+      })
+      .catch(function(){ alert('Terjadi kesalahan jaringan.'); })
+      .finally(function(){ input.disabled = false; input.focus(); });
+  }
+
+  document.getElementById('chat-send').addEventListener('click', kirim);
+  document.getElementById('chat-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') kirim();
+  });
+
+  // ----- awal & polling -----
+  poll();
+  pollTimer = setInterval(poll, 10000);
+})();
+</script>

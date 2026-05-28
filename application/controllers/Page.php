@@ -718,4 +718,73 @@ $(function(){
 		redirect('page/mKaryawan');
 	}
 
+	// ── Chat ──────────────────────────────────────────────────────────
+
+	/** POST: kirim pesan (user atau admin) */
+	public function chatKirim() {
+		if(!$this->session->userdata('authenticated')) show_404();
+		$this->output->set_content_type('application/json');
+
+		$pesan = trim($this->input->post('pesan'));
+		if($pesan === '') {
+			echo json_encode(array('ok' => false, 'msg' => 'Pesan kosong'));
+			return;
+		}
+
+		$role = (int)$this->session->userdata('role');
+		$nama = $this->session->userdata('nama');
+
+		// admin kirim ke user tertentu; user kirim ke dirinya sendiri
+		if($role === 1) {
+			$id_karyawan = (int)$this->input->post('id_karyawan');
+			if(!$id_karyawan) {
+				echo json_encode(array('ok' => false, 'msg' => 'id_karyawan diperlukan'));
+				return;
+			}
+		} else {
+			$id_karyawan = (int)$this->session->userdata('idkaryawan');
+		}
+
+		$ok = $this->UserModel->chatKirim($id_karyawan, $role, $nama, $pesan);
+		echo json_encode(array('ok' => (bool)$ok));
+	}
+
+	/** GET: ambil pesan terbaru (polling) */
+	public function chatAmbil() {
+		if(!$this->session->userdata('authenticated')) show_404();
+		$this->output->set_content_type('application/json');
+
+		$role        = (int)$this->session->userdata('role');
+		$after_id    = (int)$this->input->get('after_id');
+
+		if($role === 1) {
+			$id_karyawan = (int)$this->input->get('id_karyawan');
+			if(!$id_karyawan) { echo json_encode(array()); return; }
+			$this->UserModel->chatBacaAdmin($id_karyawan);
+		} else {
+			$id_karyawan = (int)$this->session->userdata('idkaryawan');
+			$this->UserModel->chatBacaUser($id_karyawan);
+		}
+
+		$rows = $this->UserModel->chatAmbil($id_karyawan, $after_id);
+		$out  = array();
+		foreach($rows as $r) {
+			$out[] = array(
+				'id'        => (int)$r->id,
+				'role'      => (int)$r->pengirim_role,
+				'nama'      => htmlspecialchars($r->nama_pengirim),
+				'pesan'     => htmlspecialchars($r->pesan),
+				'waktu'     => date('d/m H:i', strtotime($r->created_at)),
+			);
+		}
+		echo json_encode($out);
+	}
+
+	/** GET: halaman kelola chat admin (daftar thread) */
+	public function chatAdmin() {
+		if($this->session->userdata('role') != '1') show_404();
+		$data['threads'] = $this->UserModel->chatThreadList();
+		$this->render_backend('chatadmin', $data);
+	}
+
 }

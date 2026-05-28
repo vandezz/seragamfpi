@@ -364,4 +364,52 @@ GROUP BY nama
 		return $this->db->update('karyawan', array('kondisi' => $new));
 	}
 
+	// ── Chat ─────────────────────────────────────────────────────────
+
+	public function chatKirim($id_karyawan, $pengirim_role, $nama_pengirim, $pesan) {
+		return $this->db->insert('seragam_chat', array(
+			'id_karyawan'    => (int)$id_karyawan,
+			'pengirim_role'  => (int)$pengirim_role,
+			'nama_pengirim'  => $nama_pengirim,
+			'pesan'          => $pesan,
+			'created_at'     => date('Y-m-d H:i:s'),
+		));
+	}
+
+	public function chatAmbil($id_karyawan, $after_id = 0) {
+		$this->db->where('id_karyawan', (int)$id_karyawan);
+		if($after_id > 0) $this->db->where('id >', (int)$after_id);
+		$this->db->order_by('id', 'ASC');
+		return $this->db->get('seragam_chat')->result();
+	}
+
+	public function chatBacaAdmin($id_karyawan) {
+		$this->db->where('id_karyawan', (int)$id_karyawan);
+		$this->db->where('pengirim_role', 0);
+		return $this->db->update('seragam_chat', array('is_read' => 1));
+	}
+
+	public function chatBacaUser($id_karyawan) {
+		$this->db->where('id_karyawan', (int)$id_karyawan);
+		$this->db->where('pengirim_role', 1);
+		return $this->db->update('seragam_chat', array('is_read' => 1));
+	}
+
+	public function chatThreadList() {
+		return $this->db->query(
+			"SELECT k.id_karyawan, k.nama_karyawan, k.kd_bagian,
+				(SELECT pesan FROM seragam_chat WHERE id_karyawan = k.id_karyawan ORDER BY id DESC LIMIT 1) AS pesan_terakhir,
+				(SELECT created_at FROM seragam_chat WHERE id_karyawan = k.id_karyawan ORDER BY id DESC LIMIT 1) AS waktu_terakhir,
+				(SELECT COUNT(*) FROM seragam_chat WHERE id_karyawan = k.id_karyawan AND pengirim_role = 0 AND is_read = 0) AS belum_dibaca
+			FROM karyawan k
+			WHERE EXISTS (SELECT 1 FROM seragam_chat sc WHERE sc.id_karyawan = k.id_karyawan)
+			ORDER BY waktu_terakhir DESC"
+		)->result();
+	}
+
+	public function chatLastId($id_karyawan) {
+		$r = $this->db->select_max('id')->where('id_karyawan', (int)$id_karyawan)->get('seragam_chat')->row();
+		return $r ? (int)$r->id : 0;
+	}
+
 }

@@ -37,6 +37,12 @@
   </a>
 </li>
 <li class="nav-item">
+  <a href="<?php echo base_url('page/chatAdmin'); ?>" class="nav-link <?php echo ($this->uri->segment(2) == 'chatAdmin') ? 'active' : ''; ?>">
+    <i class="nav-icon fas fa-comments"></i>
+    <p>Chat Karyawan</p>
+  </a>
+</li>
+<li class="nav-item">
   <a href="<?php echo base_url('page/mKaryawan'); ?>" class="nav-link <?php echo ($this->uri->segment(2) == 'mKaryawan') ? 'active' : ''; ?>">
     <i class="nav-icon fas fa-user-cog"></i>
     <p>Manajemen Karyawan</p>
