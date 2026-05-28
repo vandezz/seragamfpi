@@ -157,9 +157,7 @@ $default_celana = !empty($ds->size_celana)? $ds->size_celana: (!empty($lalu->siz
 				<td bgcolor='#f2f3f4'></td>
 			</tr>
 			<?php 
-			$tglmax = '2026-01-01';
-			//$tglmax = $tglmx->row()->tanggalmax;
-			'2023-10-04';
+			$tglmax = $tglmx->row()->tanggalmax;
 			if((date('Y-m-d')< $tglmax) || ($this->session->userdata('role') == '1'))
 			{ ?>
 			<tr>
