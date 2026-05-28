@@ -32,6 +32,14 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
+      <?php if($this->session->userdata('role') == '1'): ?>
+      <li class="nav-item dropdown" id="notif-chat-item">
+        <a class="nav-link" href="<?php echo base_url('page/chatAdmin'); ?>" id="notif-chat-btn" title="Chat Karyawan">
+          <i class="fas fa-comments"></i>
+          <span class="badge badge-warning navbar-badge" id="notif-chat-badge" style="display:none">0</span>
+        </a>
+      </li>
+      <?php endif; ?>
       <li class="nav-item">
         <span class="nav-link text-light">
           <i class="fas fa-user-circle mr-1"></i>
@@ -111,5 +119,38 @@
 <script src="<?php echo base_url('js/jquery.overlayScrollbars.min.js'); ?>"></script>
 <script src="<?php echo base_url('js/adminlte.js'); ?>"></script>
 <?php if(isset($pageScripts)) echo $pageScripts; ?>
+<?php if($this->session->userdata('role') == '1'): ?>
+<script>
+(function(){
+  var BASE  = '<?php echo base_url(); ?>';
+  var badge = document.getElementById('notif-chat-badge');
+  var prev  = 0;
+  function checkUnread(){
+    fetch(BASE + 'index.php/page/chatUnread')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        var n = d.count || 0;
+        if(n > 0){
+          badge.textContent = n > 99 ? '99+' : n;
+          badge.style.display = '';
+          if(n > prev){
+            // ubah warna navbar sebentar sebagai sinyal visual
+            var nav = document.querySelector('.main-header.navbar');
+            if(nav){ nav.classList.add('navbar-warning'); nav.classList.remove('navbar-primary'); }
+            setTimeout(function(){
+              if(nav){ nav.classList.remove('navbar-warning'); nav.classList.add('navbar-primary'); }
+            }, 3000);
+          }
+        } else {
+          badge.style.display = 'none';
+        }
+        prev = n;
+      }).catch(function(){});
+  }
+  checkUnread();
+  setInterval(checkUnread, 15000);
+})();
+</script>
+<?php endif; ?>
 </body>
 </html>

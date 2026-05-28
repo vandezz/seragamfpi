@@ -787,4 +787,13 @@ $(function(){
 		$this->render_backend('chatadmin', $data);
 	}
 
+	/** GET: jumlah pesan belum dibaca (untuk notifikasi admin) */
+	public function chatUnread() {
+		if($this->session->userdata('role') != '1') {
+			echo json_encode(array('count' => 0)); return;
+		}
+		$this->output->set_content_type('application/json');
+		echo json_encode(array('count' => $this->UserModel->chatUnreadTotal()));
+	}
+
 }

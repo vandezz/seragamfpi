@@ -412,4 +412,10 @@ GROUP BY nama
 		return $r ? (int)$r->id : 0;
 	}
 
+	public function chatUnreadTotal() {
+		// Semua pesan dari karyawan (role=0) yang belum dibaca admin
+		$r = $this->db->where('pengirim_role', 0)->where('is_read', 0)->get('seragam_chat')->num_rows();
+		return (int)$r;
+	}
+
 }
