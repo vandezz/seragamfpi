@@ -29,28 +29,52 @@
 </a>
 
 <script>
-$(function(){
+document.addEventListener('DOMContentLoaded', function(){
+  var btnCek    = document.getElementById('btn_cek');
+  var inpNik    = document.getElementById('inp_nik');
+  var infoEmail = document.getElementById('info_email');
+  var infoError = document.getElementById('info_error');
+  var txtEmail  = document.getElementById('txt_email');
+  var txtError  = document.getElementById('txt_error');
+
   function cekNik(){
-    var nik = $('#inp_nik').val().trim();
+    var nik = inpNik.value.trim();
     if(!nik) return;
 
-    $('#info_email, #info_error').addClass('d-none');
-    $('#btn_cek').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+    infoEmail.classList.add('d-none');
+    infoError.classList.add('d-none');
+    btnCek.disabled = true;
+    btnCek.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-    $.post('<?= base_url('auth/ceknik'); ?>', { nik: nik }, function(res){
+    var body = new URLSearchParams();
+    body.append('nik', nik);
+
+    fetch('<?= base_url('auth/ceknik'); ?>', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
       if(res.ok){
-        $('#txt_email').text(res.email);
-        $('#info_email').removeClass('d-none');
+        txtEmail.textContent = res.email;
+        infoEmail.classList.remove('d-none');
       } else {
-        $('#txt_error').text(res.msg);
-        $('#info_error').removeClass('d-none');
+        txtError.textContent = res.msg;
+        infoError.classList.remove('d-none');
       }
-    }, 'json').always(function(){
-      $('#btn_cek').prop('disabled', false).html('<i class="fas fa-search"></i> Cek');
+    })
+    .catch(function(){
+      txtError.textContent = 'Terjadi kesalahan, coba lagi.';
+      infoError.classList.remove('d-none');
+    })
+    .finally(function(){
+      btnCek.disabled = false;
+      btnCek.innerHTML = '<i class="fas fa-search"></i> Cek';
     });
   }
 
-  $('#btn_cek').on('click', cekNik);
-  $('#inp_nik').on('keydown', function(e){ if(e.key === 'Enter') cekNik(); });
+  btnCek.addEventListener('click', cekNik);
+  inpNik.addEventListener('keydown', function(e){ if(e.key === 'Enter') cekNik(); });
 });
 </script>
