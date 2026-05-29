@@ -657,6 +657,7 @@ $(function(){
 			redirect('page/mkTambah');
 		}
 
+		$email = trim($this->input->post('email'));
 		$data = array(
 			'nama_karyawan'  => trim($this->input->post('nama_karyawan')),
 			'nik'            => $nik,
@@ -666,6 +667,7 @@ $(function(){
 			'seragam_office' => $this->input->post('seragam_office'),
 			'id_levell'      => $this->input->post('id_levell'),
 			'kondisi'        => 'AKTIF',
+			'email'          => $email ?: NULL,
 		);
 		$this->UserModel->tambahKaryawan($data);
 		$this->session->set_flashdata('msg_success', 'Karyawan "' . $data['nama_karyawan'] . '" berhasil ditambahkan.');
@@ -693,6 +695,7 @@ $(function(){
 			redirect('page/mkEdit/' . $id);
 		}
 
+		$email = trim($this->input->post('email'));
 		$data = array(
 			'nama_karyawan'  => trim($this->input->post('nama_karyawan')),
 			'nik'            => $nik,
@@ -701,6 +704,7 @@ $(function(){
 			'seragam_office' => $this->input->post('seragam_office'),
 			'id_levell'      => $this->input->post('id_levell'),
 			'kondisi'        => $this->input->post('kondisi'),
+			'email'          => $email ?: NULL,
 		);
 		$pass = trim($this->input->post('password'));
 		if($pass !== '') $data['password'] = md5($pass);
