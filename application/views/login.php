@@ -18,4 +18,9 @@
       </button>
     </div>
   </div>
+  <div class="text-center mt-3">
+    <a href="<?= base_url('auth/lupapassword'); ?>" class="text-muted" style="font-size:0.875rem;">
+      <i class="fas fa-question-circle mr-1"></i>Lupa Password?
+    </a>
+  </div>
 </form>

@@ -55,4 +55,55 @@ class Auth extends MY_Controller {
     $this->session->sess_destroy(); // Hapus semua session
     redirect('auth'); // Redirect ke halaman login
   }
+
+  public function lupapassword(){
+    if($this->session->userdata('authenticated'))
+      redirect('page/home');
+    $this->render_login('lupa_password');
+  }
+
+  public function ceknik(){
+    $this->output->set_content_type('application/json');
+
+    $nik = trim($this->input->post('nik'));
+    if(empty($nik)){
+      echo json_encode(array('ok' => false, 'msg' => 'NIK tidak boleh kosong.'));
+      return;
+    }
+
+    $user = $this->UserModel->get($nik);
+    if(empty($user)){
+      echo json_encode(array('ok' => false, 'msg' => 'NIK tidak ditemukan.'));
+      return;
+    }
+
+    $email = $user->email ?? '';
+    if(empty(trim($email))){
+      echo json_encode(array('ok' => false, 'msg' => 'Akun ini tidak memiliki email terdaftar. Hubungi admin.'));
+      return;
+    }
+
+    echo json_encode(array('ok' => true, 'email' => $this->_maskEmail(trim($email))));
+  }
+
+  private function _maskEmail($email){
+    $parts  = explode('@', $email);
+    $local  = $parts[0];
+    $domain = $parts[1];
+
+    // Mask local: tampil 1 karakter pertama + * + 1 karakter terakhir (jika cukup panjang)
+    if(strlen($local) <= 2){
+      $maskedLocal = str_repeat('*', strlen($local));
+    } else {
+      $maskedLocal = substr($local, 0, 1) . str_repeat('*', strlen($local) - 2) . substr($local, -1);
+    }
+
+    // Mask domain: tampil 1 karakter pertama domain + *** + .tld
+    $dotPos      = strrpos($domain, '.');
+    $domainName  = substr($domain, 0, $dotPos);
+    $tld         = substr($domain, $dotPos);
+    $maskedDomain = substr($domainName, 0, 1) . str_repeat('*', max(strlen($domainName) - 1, 2)) . $tld;
+
+    return $maskedLocal . '@' . $maskedDomain;
+  }
 }
