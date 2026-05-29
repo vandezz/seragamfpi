@@ -33,6 +33,14 @@
     <div class="card-body login-card-body">
       <p class="login-box-msg">Masuk menggunakan Nomor Induk Karyawan Anda</p>
 
+      <?php if($this->session->flashdata('message_success')): ?>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle mr-1"></i>
+        <?php echo $this->session->flashdata('message_success'); ?>
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+      </div>
+      <?php endif; ?>
+
       <?php if($this->session->flashdata('message')): ?>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="fas fa-exclamation-circle mr-1"></i>

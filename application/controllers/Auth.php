@@ -86,6 +86,108 @@ class Auth extends MY_Controller {
     echo json_encode(array('ok' => true, 'email' => $this->_maskEmail(trim($email))));
   }
 
+  public function kirimreset(){
+    $this->output->set_content_type('application/json');
+
+    $nik = trim($this->input->post('nik'));
+    if(empty($nik)){
+      echo json_encode(array('ok' => false, 'msg' => 'NIK tidak valid.'));
+      return;
+    }
+
+    $user = $this->UserModel->get($nik);
+    if(empty($user) || empty(trim($user->email ?? ''))){
+      echo json_encode(array('ok' => false, 'msg' => 'NIK tidak ditemukan atau tidak memiliki email.'));
+      return;
+    }
+
+    $token      = bin2hex(random_bytes(32));
+    $expired_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
+    $this->UserModel->simpanToken($nik, $token, $expired_at);
+
+    $reset_url = base_url('auth/resetpassword/' . $token);
+
+    $this->load->config('email');
+    $this->email->initialize(array(
+      'protocol'    => $this->config->item('protocol'),
+      'smtp_host'   => $this->config->item('smtp_host'),
+      'smtp_port'   => $this->config->item('smtp_port'),
+      'smtp_crypto' => $this->config->item('smtp_crypto'),
+      'smtp_user'   => $this->config->item('smtp_user'),
+      'smtp_pass'   => $this->config->item('smtp_pass'),
+      'charset'     => 'utf-8',
+      'mailtype'    => 'html',
+      'newline'     => "\r\n",
+    ));
+
+    $this->email->from($this->config->item('from_email'), $this->config->item('from_name'));
+    $this->email->to(trim($user->email));
+    $this->email->subject('Reset Password – Seragam FPI');
+    $this->email->message('
+      <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:24px;border:1px solid #ddd;border-radius:8px;">
+        <h2 style="color:#0d47a1;">Reset Password</h2>
+        <p>Halo <strong>' . htmlspecialchars($user->nama_karyawan) . '</strong>,</p>
+        <p>Kami menerima permintaan reset password untuk akun Anda (NIK: <strong>' . htmlspecialchars($nik) . '</strong>).</p>
+        <p>Klik tombol di bawah untuk membuat password baru. Link ini berlaku selama <strong>1 jam</strong>.</p>
+        <p style="text-align:center;margin:32px 0;">
+          <a href="' . $reset_url . '" style="background:#0d47a1;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-size:15px;">
+            Reset Password
+          </a>
+        </p>
+        <p style="font-size:12px;color:#888;">Jika Anda tidak merasa meminta reset password, abaikan email ini.</p>
+        <hr style="border:none;border-top:1px solid #eee;">
+        <p style="font-size:11px;color:#aaa;">PT. Fuji Presisi-Tool Indonesia &copy; ' . date('Y') . '</p>
+      </div>
+    ');
+
+    if($this->email->send()){
+      echo json_encode(array('ok' => true));
+    } else {
+      log_message('error', 'Reset password email gagal: ' . $this->email->print_debugger());
+      echo json_encode(array('ok' => false, 'msg' => 'Gagal mengirim email. Coba beberapa saat lagi.'));
+    }
+  }
+
+  public function resetpassword($token = NULL){
+    if(empty($token)) redirect('auth');
+
+    $data = $this->UserModel->cekToken($token);
+    if(empty($data)){
+      $this->session->set_flashdata('message', 'Link reset tidak valid atau sudah kadaluarsa.');
+      redirect('auth');
+    }
+
+    $this->render_login('reset_password', array('token' => $token));
+  }
+
+  public function prosesreset(){
+    $token    = $this->input->post('token');
+    $pw_baru  = $this->input->post('pw_baru');
+    $cpw_baru = $this->input->post('cpw_baru');
+
+    if(empty($token) || empty($pw_baru) || empty($cpw_baru)){
+      $this->session->set_flashdata('message', 'Semua field wajib diisi.');
+      redirect('auth/resetpassword/' . $token);
+    }
+
+    if($pw_baru !== $cpw_baru){
+      $this->session->set_flashdata('message', 'Konfirmasi password tidak cocok.');
+      redirect('auth/resetpassword/' . $token);
+    }
+
+    $data = $this->UserModel->cekToken($token);
+    if(empty($data)){
+      $this->session->set_flashdata('message', 'Link reset tidak valid atau sudah kadaluarsa.');
+      redirect('auth');
+    }
+
+    $this->UserModel->updatepassByNik($data->nik, md5($pw_baru));
+    $this->UserModel->hapusToken($token);
+
+    $this->session->set_flashdata('message_success', 'Password berhasil direset. Silakan login.');
+    redirect('auth');
+  }
+
   private function _maskEmail($email){
     $parts  = explode('@', $email);
     $local  = $parts[0];

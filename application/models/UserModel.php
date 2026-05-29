@@ -204,6 +204,33 @@ GROUP BY nama
 		$this->db->where('id_karyawan', $idk);
 		return $this->db->update('karyawan', array('password' => $np));
 	}
+
+	public function updatepassByNik($nik, $password){
+		$this->db->where('nik', $nik);
+		return $this->db->update('karyawan', array('password' => $password));
+	}
+
+	public function simpanToken($nik, $token, $expired_at){
+		// Hapus token lama milik NIK ini dulu
+		$this->db->where('nik', $nik);
+		$this->db->delete('password_resets');
+		return $this->db->insert('password_resets', array(
+			'nik'        => $nik,
+			'token'      => $token,
+			'expired_at' => $expired_at,
+		));
+	}
+
+	public function cekToken($token){
+		$this->db->where('token', $token);
+		$this->db->where('expired_at >=', date('Y-m-d H:i:s'));
+		return $this->db->get('password_resets')->row();
+	}
+
+	public function hapusToken($token){
+		$this->db->where('token', $token);
+		return $this->db->delete('password_resets');
+	}
 	
 	public function yangbelum($pd){
 		return $this->db->query(
