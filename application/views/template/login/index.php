@@ -54,8 +54,15 @@
     </div>
   </div>
 
-  <div class="text-center mt-3" style="color:rgba(255,255,255,0.6); font-size:0.8rem;">
-    &copy; <?php echo date('Y'); ?> PT. Fuji Presisi-Tool Indonesia
+  <div class="text-center mt-3">
+    <?php if($this->uri->segment(2) !== 'index' && $this->uri->segment(1) === 'auth' && $this->uri->segment(2) !== ''): ?>
+    <a href="<?php echo base_url('auth'); ?>" style="color:rgba(255,255,255,0.75); font-size:0.85rem;">
+      <i class="fas fa-arrow-left mr-1"></i> Kembali ke Login
+    </a><br><br>
+    <?php endif; ?>
+    <span style="color:rgba(255,255,255,0.6); font-size:0.8rem;">
+      &copy; <?php echo date('Y'); ?> PT. Fuji Presisi-Tool Indonesia
+    </span>
   </div>
 </div>
 
