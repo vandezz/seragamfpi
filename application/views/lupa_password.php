@@ -105,8 +105,18 @@ document.addEventListener('DOMContentLoaded', function(){
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: body.toString()
     })
-    .then(function(r){ return r.json(); })
-    .then(function(res){
+    .then(function(r){ return r.text(); })
+    .then(function(text){
+      var res;
+      try { res = JSON.parse(text); } catch(e){
+        // Bukan JSON — tampilkan raw response untuk debug
+        txtError.textContent = 'Server error: ' + text.substring(0, 200);
+        infoError.classList.remove('d-none');
+        infoEmail.classList.remove('d-none');
+        btnKirim.disabled = false;
+        btnKirim.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Kirim Link Reset ke Email';
+        return;
+      }
       if(res.ok){
         infoEmail.classList.add('d-none');
         txtSukses.textContent = 'Link reset telah dikirim ke email Anda. Periksa kotak masuk (atau folder spam).';
@@ -122,8 +132,8 @@ document.addEventListener('DOMContentLoaded', function(){
         btnKirim.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Kirim Link Reset ke Email';
       }
     })
-    .catch(function(){
-      txtError.textContent = 'Terjadi kesalahan, coba lagi.';
+    .catch(function(e){
+      txtError.textContent = 'Network error: ' + e.message;
       infoError.classList.remove('d-none');
       btnKirim.disabled = false;
       btnKirim.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Kirim Link Reset ke Email';
