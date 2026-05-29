@@ -91,13 +91,13 @@ class Auth extends MY_Controller {
 
     $nik = trim($this->input->post('nik'));
     if(empty($nik)){
-      echo json_encode(array('ok' => false, 'msg' => 'NIK tidak valid.'));
+      $this->output->set_output(json_encode(array('ok' => false, 'msg' => 'NIK tidak valid.')));
       return;
     }
 
     $user = $this->UserModel->get($nik);
     if(empty($user) || empty(trim($user->email ?? ''))){
-      echo json_encode(array('ok' => false, 'msg' => 'NIK tidak ditemukan atau tidak memiliki email.'));
+      $this->output->set_output(json_encode(array('ok' => false, 'msg' => 'NIK tidak ditemukan atau tidak memiliki email.')));
       return;
     }
 
@@ -108,9 +108,9 @@ class Auth extends MY_Controller {
     $reset_url = base_url('auth/resetpassword/' . $token);
 
     try {
-      // Cek apakah config email tersedia
       if(!file_exists(APPPATH . 'config/email.php')){
-        throw new Exception('File konfigurasi email tidak ditemukan di server.');
+        $this->output->set_output(json_encode(array('ok' => false, 'msg' => 'File konfigurasi email tidak ditemukan di server.')));
+        return;
       }
 
       $this->load->config('email');
@@ -146,19 +146,16 @@ class Auth extends MY_Controller {
         </div>
       ');
 
-      $sent = $this->email->send(FALSE); // FALSE = jangan throw exception
-      ob_clean();
-      if($sent){
-        echo json_encode(array('ok' => true));
+      if($this->email->send(FALSE)){
+        $this->output->set_output(json_encode(array('ok' => true)));
       } else {
-        $debug = $this->email->print_debugger(array('headers'));
+        $debug = strip_tags($this->email->print_debugger(array('headers')));
         log_message('error', 'Reset password email gagal: ' . $debug);
-        echo json_encode(array('ok' => false, 'msg' => 'Gagal mengirim email. Periksa konfigurasi SMTP.'));
+        $this->output->set_output(json_encode(array('ok' => false, 'msg' => 'Gagal mengirim email. Periksa konfigurasi SMTP.')));
       }
     } catch(Exception $e){
       log_message('error', 'kirimreset exception: ' . $e->getMessage());
-      ob_clean();
-      echo json_encode(array('ok' => false, 'msg' => 'Error: ' . $e->getMessage()));
+      $this->output->set_output(json_encode(array('ok' => false, 'msg' => 'Error: ' . $e->getMessage())));
     }
   }
 
