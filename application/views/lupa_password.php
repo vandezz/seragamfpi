@@ -156,10 +156,6 @@ document.addEventListener('DOMContentLoaded', function(){
   <span id="txt_error"></span>
 </div>
 
-<a href="<?= base_url('auth'); ?>" class="btn btn-secondary btn-block mt-3">
-  <i class="fas fa-arrow-left mr-1"></i> Kembali ke Login
-</a>
-
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var btnCek    = document.getElementById('btn_cek');

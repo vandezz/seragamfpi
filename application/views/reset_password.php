@@ -47,6 +47,4 @@
   </button>
 </form>
 
-<a href="<?= base_url('auth'); ?>" class="btn btn-secondary btn-block mt-2">
-  <i class="fas fa-arrow-left mr-1"></i> Kembali ke Login
-</a>
+
