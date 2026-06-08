@@ -419,102 +419,100 @@ class Page extends MY_Controller {
 	 $thn = date('Y');
 	 $data = $this->UserModel->seragamlist($thn)->result();
 	 
-	 try {
-		 // Create spreadsheet
-		 $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-		 $sheet = $spreadsheet->getActiveSheet()->setTitle('Data Seragam');
-		 
-		 // Set title
-		 $sheet->mergeCells('A1:K1');
-		 $titleCell = $sheet->getCell('A1');
-		 $titleCell->setValue('DATA UKURAN SERAGAM TAHUN ' . $thn);
-		 $titleStyle = $titleCell->getStyle();
-		 $titleStyle->getFont()->setBold(true)->setSize(14);
-		 $titleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		 $titleStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFD3D3D3');
-		 
-		 // Subtitle
-		 $sheet->mergeCells('A2:K2');
-		 $subtitleCell = $sheet->getCell('A2');
-		 $subtitleCell->setValue('PT. Fuji Presisi - Tool Indonesia');
-		 $subtitleStyle = $subtitleCell->getStyle();
-		 $subtitleStyle->getFont()->setItalic(true)->setSize(11);
-		 $subtitleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		 
-		 // Headers
-		 $headers = ['No', 'ID Karyawan', 'Nama Karyawan', 'Bagian', 'Ukuran Baju', 'Lengan', 
-					 'Bahan Baju', 'Jenis Baju', 'Ukuran Celana', 'Jenis Celana', 'Keterangan'];
-		 
-		 $headerRow = 4;
-		 for ($col = 0; $col < count($headers); $col++) {
-			 $cellRef = chr(65 + $col) . $headerRow;
-			 $cell = $sheet->getCell($cellRef);
-			 $cell->setValue($headers[$col]);
-			 $style = $cell->getStyle();
-			 $style->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-			 $style->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF366092');
-			 $style->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-			 $style->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-			 $style->getAlignment()->setWrapText(true);
-		 }
-		 $sheet->setRowHeight($headerRow, 25);
-		 
-		 // Data rows
-		 $row = 5;
-		 $no = 1;
-		 foreach ($data as $item) {
-			 $sheet->setCellValue('A' . $row, $no);
-			 $sheet->setCellValue('B' . $row, $item->idk);
-			 $sheet->setCellValue('C' . $row, $item->Nama);
-			 $sheet->setCellValue('D' . $row, $item->Bagian);
-			 $sheet->setCellValue('E' . $row, $item->Sizebaju);
-			 $sheet->setCellValue('F' . $row, $item->Lengan);
-			 $sheet->setCellValue('G' . $row, $item->BahanBaju);
-			 $sheet->setCellValue('H' . $row, $item->JenisBaju);
-			 $sheet->setCellValue('I' . $row, $item->SizeCelana);
-			 $sheet->setCellValue('J' . $row, $item->JenisCelana);
-			 $sheet->setCellValue('K' . $row, $item->Ket);
-			 
-			 // Alternate row colors
-			 $backgroundColor = ($no % 2 == 0) ? 'FFF2F2F2' : 'FFFFFFFF';
-			 for ($col = 0; $col < 11; $col++) {
-				 $cellRef = chr(65 + $col) . $row;
-				 $cellStyle = $sheet->getCell($cellRef)->getStyle();
-				 $cellStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($backgroundColor);
-			 }
-			 
-			 $row++;
-			 $no++;
-		 }
-		 
-		 // Set column widths
-		 $sheet->getColumnDimension('A')->setWidth(5);
-		 $sheet->getColumnDimension('B')->setWidth(12);
-		 $sheet->getColumnDimension('C')->setWidth(22);
-		 $sheet->getColumnDimension('D')->setWidth(15);
-		 $sheet->getColumnDimension('E')->setWidth(13);
-		 $sheet->getColumnDimension('F')->setWidth(10);
-		 $sheet->getColumnDimension('G')->setWidth(13);
-		 $sheet->getColumnDimension('H')->setWidth(15);
-		 $sheet->getColumnDimension('I')->setWidth(13);
-		 $sheet->getColumnDimension('J')->setWidth(15);
-		 $sheet->getColumnDimension('K')->setWidth(20);
-		 
-		 // Freeze first rows
-		 $sheet->freezePane('A5');
-		 
-		 // Output file
-		 $filename = 'Angket-Seragam-' . $thn . '.xlsx';
-		 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		 header('Content-Disposition: attachment; filename="' . $filename . '"');
-		 header('Cache-Control: max-age=0');
-		 
-		 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-		 $writer->save('php://output');
-		 exit;
-	 } catch (Exception $e) {
-		 show_error('Error generating Excel file: ' . $e->getMessage());
+	 // Create spreadsheet
+	 $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+	 $sheet = $spreadsheet->getActiveSheet();
+	 $sheet->setTitle('Data Seragam');
+	 
+	 // Title - Row 1
+	 $sheet->mergeCells('A1:K1');
+	 $sheet->setCellValue('A1', 'DATA UKURAN SERAGAM TAHUN ' . $thn);
+	 
+	 $titleStyle = $sheet->getStyle('A1');
+	 $titleStyle->getFont()->setBold(true)->setSize(14);
+	 $titleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 
+	 // Subtitle - Row 2
+	 $sheet->mergeCells('A2:K2');
+	 $sheet->setCellValue('A2', 'PT. Fuji Presisi - Tool Indonesia');
+	 
+	 $subtitleStyle = $sheet->getStyle('A2');
+	 $subtitleStyle->getFont()->setItalic(true)->setSize(11);
+	 $subtitleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 
+	 // Empty row - Row 3
+	 // Headers - Row 4
+	 $headers = array('No', 'ID Karyawan', 'Nama Karyawan', 'Bagian', 'Ukuran Baju', 'Lengan', 
+					  'Bahan Baju', 'Jenis Baju', 'Ukuran Celana', 'Jenis Celana', 'Keterangan');
+	 
+	 $col = 1;
+	 foreach ($headers as $header) {
+		 $sheet->setCellValueByColumnAndRow($col, 4, $header);
+		 $col++;
 	 }
+	 
+	 // Format header row
+	 $headerStyle = $sheet->getStyle('A4:K4');
+	 $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
+	 $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+	 $headerStyle->getFill()->getStartColor()->setARGB('FF366092');
+	 $headerStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 $headerStyle->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+	 $sheet->getRowDimension(4)->setRowHeight(25);
+	 
+	 // Data rows - Start from Row 5
+	 $row = 5;
+	 $no = 1;
+	 
+	 foreach ($data as $item) {
+		 $sheet->setCellValueByColumnAndRow(1, $row, $no);
+		 $sheet->setCellValueByColumnAndRow(2, $row, isset($item->idk) ? $item->idk : '');
+		 $sheet->setCellValueByColumnAndRow(3, $row, isset($item->Nama) ? $item->Nama : '');
+		 $sheet->setCellValueByColumnAndRow(4, $row, isset($item->Bagian) ? $item->Bagian : '');
+		 $sheet->setCellValueByColumnAndRow(5, $row, isset($item->Sizebaju) ? $item->Sizebaju : '');
+		 $sheet->setCellValueByColumnAndRow(6, $row, isset($item->Lengan) ? $item->Lengan : '');
+		 $sheet->setCellValueByColumnAndRow(7, $row, isset($item->BahanBaju) ? $item->BahanBaju : '');
+		 $sheet->setCellValueByColumnAndRow(8, $row, isset($item->JenisBaju) ? $item->JenisBaju : '');
+		 $sheet->setCellValueByColumnAndRow(9, $row, isset($item->SizeCelana) ? $item->SizeCelana : '');
+		 $sheet->setCellValueByColumnAndRow(10, $row, isset($item->JenisCelana) ? $item->JenisCelana : '');
+		 $sheet->setCellValueByColumnAndRow(11, $row, isset($item->Ket) ? $item->Ket : '');
+		 
+		 // Alternate row colors
+		 $bgColor = ($no % 2 == 0) ? 'FFF2F2F2' : 'FFFFFFFF';
+		 $rowStyle = $sheet->getStyle('A' . $row . ':K' . $row);
+		 $rowStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+		 $rowStyle->getFill()->getStartColor()->setARGB($bgColor);
+		 
+		 $row++;
+		 $no++;
+	 }
+	 
+	 // Set column widths
+	 $sheet->getColumnDimensionByColumn(1)->setWidth(5);
+	 $sheet->getColumnDimensionByColumn(2)->setWidth(12);
+	 $sheet->getColumnDimensionByColumn(3)->setWidth(22);
+	 $sheet->getColumnDimensionByColumn(4)->setWidth(15);
+	 $sheet->getColumnDimensionByColumn(5)->setWidth(13);
+	 $sheet->getColumnDimensionByColumn(6)->setWidth(10);
+	 $sheet->getColumnDimensionByColumn(7)->setWidth(13);
+	 $sheet->getColumnDimensionByColumn(8)->setWidth(15);
+	 $sheet->getColumnDimensionByColumn(9)->setWidth(13);
+	 $sheet->getColumnDimensionByColumn(10)->setWidth(15);
+	 $sheet->getColumnDimensionByColumn(11)->setWidth(20);
+	 
+	 // Freeze panes
+	 $sheet->freezePane('A5');
+	 
+	 // Create writer and output
+	 $filename = 'Angket-Seragam-' . $thn . '.xlsx';
+	 
+	 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+	 header('Content-Disposition: attachment; filename="' . $filename . '"');
+	 header('Cache-Control: max-age=0');
+	 
+	 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+	 $writer->save('php://output');
+	 exit;
  }
  
  public function yangbelum()
