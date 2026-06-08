@@ -414,75 +414,12 @@ class Page extends MY_Controller {
 
  public function unduh()
  {
-	 if($this->session->userdata('role') != '1') show_404();
-	 
 	 $thn = date('Y');
-	 $result = $this->UserModel->seragamlist($thn);
-	 
-	 if($result->num_rows() > 0) {
-		 $data = $result->result();
-	 } else {
-		 $data = array();
-	 }
-	 
-	 // Create workbook
-	 $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-	 $worksheet = $spreadsheet->getActiveSheet();
-	 $worksheet->setTitle('Seragam');
-	 
-	 // Headers
-	 $worksheet->setCellValue('A1', 'No');
-	 $worksheet->setCellValue('B1', 'ID Karyawan');
-	 $worksheet->setCellValue('C1', 'Nama Karyawan');
-	 $worksheet->setCellValue('D1', 'Bagian');
-	 $worksheet->setCellValue('E1', 'Ukuran Baju');
-	 $worksheet->setCellValue('F1', 'Lengan');
-	 $worksheet->setCellValue('G1', 'Bahan Baju');
-	 $worksheet->setCellValue('H1', 'Jenis Baju');
-	 $worksheet->setCellValue('I1', 'Ukuran Celana');
-	 $worksheet->setCellValue('J1', 'Jenis Celana');
-	 $worksheet->setCellValue('K1', 'Keterangan');
-	 
-	 // Make header bold
-	 $worksheet->getStyle('A1:K1')->getFont()->setBold(true);
-	 
-	 // Data
-	 $row = 2;
-	 $no = 1;
-	 foreach($data as $item) {
-		 $worksheet->setCellValue('A' . $row, $no);
-		 $worksheet->setCellValue('B' . $row, $item->idk ?? '');
-		 $worksheet->setCellValue('C' . $row, $item->Nama ?? '');
-		 $worksheet->setCellValue('D' . $row, $item->Bagian ?? '');
-		 $worksheet->setCellValue('E' . $row, $item->Sizebaju ?? '');
-		 $worksheet->setCellValue('F' . $row, $item->Lengan ?? '');
-		 $worksheet->setCellValue('G' . $row, $item->BahanBaju ?? '');
-		 $worksheet->setCellValue('H' . $row, $item->JenisBaju ?? '');
-		 $worksheet->setCellValue('I' . $row, $item->SizeCelana ?? '');
-		 $worksheet->setCellValue('J' . $row, $item->JenisCelana ?? '');
-		 $worksheet->setCellValue('K' . $row, $item->Ket ?? '');
-		 
-		 $row++;
-		 $no++;
-	 }
-	 
-	 // Auto width columns
-	 foreach(range('A', 'K') as $col) {
-		 $worksheet->getColumnDimension($col)->setAutoSize(true);
-	 }
-	 
-	 // Output
-	 $filename = 'Angket-Seragam-' . $thn . '.xlsx';
-	 
-	 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-	 header('Content-Disposition: attachment; filename="' . $filename . '"');
-	 header('Cache-Control: max-age=0');
-	 header('Pragma: public');
-	 header('Expires: 0');
-	 
-	 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-	 $writer->save('php://output');
-	 exit;
+	 header("Content-type: application/vnd-ms-excel");
+	 header("Content-Disposition: attachment; filename=Angket-Seragam-".$thn.".xls");
+	 $data['tahun'] = $thn;
+	 $data['xls'] = $this->UserModel->seragamlist($thn);
+	 $this->load->view('unduh',$data);
  }
  
  public function yangbelum()
