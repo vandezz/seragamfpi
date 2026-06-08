@@ -417,98 +417,68 @@ class Page extends MY_Controller {
 	 if($this->session->userdata('role') != '1') show_404();
 	 
 	 $thn = date('Y');
-	 $data = $this->UserModel->seragamlist($thn)->result();
+	 $result = $this->UserModel->seragamlist($thn);
 	 
-	 // Create spreadsheet
-	 $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-	 $sheet = $spreadsheet->getActiveSheet();
-	 $sheet->setTitle('Data Seragam');
-	 
-	 // Title - Row 1
-	 $sheet->mergeCells('A1:K1');
-	 $sheet->setCellValue('A1', 'DATA UKURAN SERAGAM TAHUN ' . $thn);
-	 
-	 $titleStyle = $sheet->getStyle('A1');
-	 $titleStyle->getFont()->setBold(true)->setSize(14);
-	 $titleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-	 
-	 // Subtitle - Row 2
-	 $sheet->mergeCells('A2:K2');
-	 $sheet->setCellValue('A2', 'PT. Fuji Presisi - Tool Indonesia');
-	 
-	 $subtitleStyle = $sheet->getStyle('A2');
-	 $subtitleStyle->getFont()->setItalic(true)->setSize(11);
-	 $subtitleStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-	 
-	 // Empty row - Row 3
-	 // Headers - Row 4
-	 $headers = array('No', 'ID Karyawan', 'Nama Karyawan', 'Bagian', 'Ukuran Baju', 'Lengan', 
-					  'Bahan Baju', 'Jenis Baju', 'Ukuran Celana', 'Jenis Celana', 'Keterangan');
-	 
-	 $col = 1;
-	 foreach ($headers as $header) {
-		 $sheet->setCellValueByColumnAndRow($col, 4, $header);
-		 $col++;
+	 if($result->num_rows() > 0) {
+		 $data = $result->result();
+	 } else {
+		 $data = array();
 	 }
 	 
-	 // Format header row
-	 $headerStyle = $sheet->getStyle('A4:K4');
-	 $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-	 $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-	 $headerStyle->getFill()->getStartColor()->setARGB('FF366092');
-	 $headerStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-	 $headerStyle->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-	 $sheet->getRowDimension(4)->setRowHeight(25);
+	 // Create workbook
+	 $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+	 $worksheet = $spreadsheet->getActiveSheet();
+	 $worksheet->setTitle('Seragam');
 	 
-	 // Data rows - Start from Row 5
-	 $row = 5;
+	 // Headers
+	 $worksheet->setCellValue('A1', 'No');
+	 $worksheet->setCellValue('B1', 'ID Karyawan');
+	 $worksheet->setCellValue('C1', 'Nama Karyawan');
+	 $worksheet->setCellValue('D1', 'Bagian');
+	 $worksheet->setCellValue('E1', 'Ukuran Baju');
+	 $worksheet->setCellValue('F1', 'Lengan');
+	 $worksheet->setCellValue('G1', 'Bahan Baju');
+	 $worksheet->setCellValue('H1', 'Jenis Baju');
+	 $worksheet->setCellValue('I1', 'Ukuran Celana');
+	 $worksheet->setCellValue('J1', 'Jenis Celana');
+	 $worksheet->setCellValue('K1', 'Keterangan');
+	 
+	 // Make header bold
+	 $worksheet->getStyle('A1:K1')->getFont()->setBold(true);
+	 
+	 // Data
+	 $row = 2;
 	 $no = 1;
-	 
-	 foreach ($data as $item) {
-		 $sheet->setCellValueByColumnAndRow(1, $row, $no);
-		 $sheet->setCellValueByColumnAndRow(2, $row, isset($item->idk) ? $item->idk : '');
-		 $sheet->setCellValueByColumnAndRow(3, $row, isset($item->Nama) ? $item->Nama : '');
-		 $sheet->setCellValueByColumnAndRow(4, $row, isset($item->Bagian) ? $item->Bagian : '');
-		 $sheet->setCellValueByColumnAndRow(5, $row, isset($item->Sizebaju) ? $item->Sizebaju : '');
-		 $sheet->setCellValueByColumnAndRow(6, $row, isset($item->Lengan) ? $item->Lengan : '');
-		 $sheet->setCellValueByColumnAndRow(7, $row, isset($item->BahanBaju) ? $item->BahanBaju : '');
-		 $sheet->setCellValueByColumnAndRow(8, $row, isset($item->JenisBaju) ? $item->JenisBaju : '');
-		 $sheet->setCellValueByColumnAndRow(9, $row, isset($item->SizeCelana) ? $item->SizeCelana : '');
-		 $sheet->setCellValueByColumnAndRow(10, $row, isset($item->JenisCelana) ? $item->JenisCelana : '');
-		 $sheet->setCellValueByColumnAndRow(11, $row, isset($item->Ket) ? $item->Ket : '');
-		 
-		 // Alternate row colors
-		 $bgColor = ($no % 2 == 0) ? 'FFF2F2F2' : 'FFFFFFFF';
-		 $rowStyle = $sheet->getStyle('A' . $row . ':K' . $row);
-		 $rowStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-		 $rowStyle->getFill()->getStartColor()->setARGB($bgColor);
+	 foreach($data as $item) {
+		 $worksheet->setCellValue('A' . $row, $no);
+		 $worksheet->setCellValue('B' . $row, $item->idk ?? '');
+		 $worksheet->setCellValue('C' . $row, $item->Nama ?? '');
+		 $worksheet->setCellValue('D' . $row, $item->Bagian ?? '');
+		 $worksheet->setCellValue('E' . $row, $item->Sizebaju ?? '');
+		 $worksheet->setCellValue('F' . $row, $item->Lengan ?? '');
+		 $worksheet->setCellValue('G' . $row, $item->BahanBaju ?? '');
+		 $worksheet->setCellValue('H' . $row, $item->JenisBaju ?? '');
+		 $worksheet->setCellValue('I' . $row, $item->SizeCelana ?? '');
+		 $worksheet->setCellValue('J' . $row, $item->JenisCelana ?? '');
+		 $worksheet->setCellValue('K' . $row, $item->Ket ?? '');
 		 
 		 $row++;
 		 $no++;
 	 }
 	 
-	 // Set column widths
-	 $sheet->getColumnDimensionByColumn(1)->setWidth(5);
-	 $sheet->getColumnDimensionByColumn(2)->setWidth(12);
-	 $sheet->getColumnDimensionByColumn(3)->setWidth(22);
-	 $sheet->getColumnDimensionByColumn(4)->setWidth(15);
-	 $sheet->getColumnDimensionByColumn(5)->setWidth(13);
-	 $sheet->getColumnDimensionByColumn(6)->setWidth(10);
-	 $sheet->getColumnDimensionByColumn(7)->setWidth(13);
-	 $sheet->getColumnDimensionByColumn(8)->setWidth(15);
-	 $sheet->getColumnDimensionByColumn(9)->setWidth(13);
-	 $sheet->getColumnDimensionByColumn(10)->setWidth(15);
-	 $sheet->getColumnDimensionByColumn(11)->setWidth(20);
+	 // Auto width columns
+	 foreach(range('A', 'K') as $col) {
+		 $worksheet->getColumnDimension($col)->setAutoSize(true);
+	 }
 	 
-	 // Freeze panes
-	 $sheet->freezePane('A5');
-	 
-	 // Create writer and output
+	 // Output
 	 $filename = 'Angket-Seragam-' . $thn . '.xlsx';
 	 
 	 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 	 header('Content-Disposition: attachment; filename="' . $filename . '"');
 	 header('Cache-Control: max-age=0');
+	 header('Pragma: public');
+	 header('Expires: 0');
 	 
 	 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 	 $writer->save('php://output');
