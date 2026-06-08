@@ -415,11 +415,53 @@ class Page extends MY_Controller {
  public function unduh()
  {
 	 $thn = date('Y');
+	 
+	 // Get data
+	 $result = $this->UserModel->seragamlist($thn);
+	 
+	 // Set headers
 	 header("Content-type: application/vnd-ms-excel");
 	 header("Content-Disposition: attachment; filename=Angket-Seragam-".$thn.".xls");
-	 $data['tahun'] = $thn;
-	 $data['xls'] = $this->UserModel->seragamlist($thn);
-	 $this->load->view('unduh',$data);
+	 
+	 // Output HTML table
+	 echo "DATA UKURAN SERAGAM TAHUN " . $thn . " (PT. Fuji Presisi-Tool Indonesia)\n";
+	 echo "<table border='1'>";
+	 echo "<tr>";
+	 echo "<th>No</th>";
+	 echo "<th>ID Karyawan</th>";
+	 echo "<th>Nama Karyawan</th>";
+	 echo "<th>Bagian</th>";
+	 echo "<th>Ukuran Baju</th>";
+	 echo "<th>Lengan</th>";
+	 echo "<th>Bahan Baju</th>";
+	 echo "<th>Jenis Baju</th>";
+	 echo "<th>Ukuran Celana</th>";
+	 echo "<th>Jenis Celana</th>";
+	 echo "<th>Keterangan</th>";
+	 echo "</tr>";
+	 
+	 if($result && $result->num_rows() > 0) {
+		 $no = 1;
+		 foreach($result->result() as $row) {
+			 echo "<tr>";
+			 echo "<td>" . $no . "</td>";
+			 echo "<td>" . (isset($row->idk) ? $row->idk : '') . "</td>";
+			 echo "<td>" . (isset($row->Nama) ? $row->Nama : '') . "</td>";
+			 echo "<td>" . (isset($row->Bagian) ? $row->Bagian : '') . "</td>";
+			 echo "<td>" . (isset($row->Sizebaju) ? $row->Sizebaju : '') . "</td>";
+			 echo "<td>" . (isset($row->Lengan) ? $row->Lengan : '') . "</td>";
+			 echo "<td>" . (isset($row->BahanBaju) ? $row->BahanBaju : '') . "</td>";
+			 echo "<td>" . (isset($row->JenisBaju) ? $row->JenisBaju : '') . "</td>";
+			 echo "<td>" . (isset($row->SizeCelana) ? $row->SizeCelana : '') . "</td>";
+			 echo "<td>" . (isset($row->JenisCelana) ? $row->JenisCelana : '') . "</td>";
+			 echo "<td>" . (isset($row->Ket) ? $row->Ket : '') . "</td>";
+			 echo "</tr>";
+			 $no++;
+		 }
+	 }
+	 
+	 echo "</table>";
+	 exit;
  }
  
  public function yangbelum()
