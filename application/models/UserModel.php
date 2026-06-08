@@ -252,6 +252,7 @@ GROUP BY nama
 			"SELECT seragam.idkaryawan, karyawan.nama_karyawan
 			FROM seragam INNER JOIN karyawan ON seragam.idkaryawan = karyawan.id_karyawan
 			WHERE periode = ?
+			AND karyawan.kondisi = 'AKTIF'
 			EXCEPT (
 				SELECT seragam.idkaryawan, karyawan.nama_karyawan
 				FROM seragam INNER JOIN karyawan ON seragam.idkaryawan = karyawan.id_karyawan
